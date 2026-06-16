@@ -61,6 +61,7 @@ Write-Host "[4/4] Installing bundled sub-skills..."
 
 $BundledDir = Join-Path $ScriptDir "bundled-skills"
 $SkillsToInstall = @("brainstorming", "writing-plans", "executing-plans", "using-git-worktrees", "finishing-a-development-branch")
+$OptionalSkills = @("ui-ux-pro-max")
 
 foreach ($skill in $SkillsToInstall) {
     $skillTarget = Join-Path $SkillsDir $skill
@@ -92,6 +93,18 @@ foreach ($skill in $SkillsToInstall) {
     $skillSource = Join-Path $BundledDir $skill
     Copy-Item -Recurse -Force $skillSource $skillTarget
     Write-Host "  OK: $skill installed" -ForegroundColor Green
+}
+
+# 4b. Install optional frontend skill (ui-ux-pro-max)
+foreach ($skill in $OptionalSkills) {
+    $skillTarget = Join-Path $SkillsDir $skill
+    if (Test-Path $skillTarget) {
+        Write-Host "  SKIP: $skill - already installed" -ForegroundColor DarkGray
+        continue
+    }
+    $skillSource = Join-Path $BundledDir $skill
+    Copy-Item -Recurse -Force $skillSource $skillTarget
+    Write-Host "  OK: $skill installed (frontend design support)" -ForegroundColor Green
 }
 
 # 5. Verify

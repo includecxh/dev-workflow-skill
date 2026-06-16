@@ -35,10 +35,9 @@ Request arrives
 
 - [Claude Code](https://claude.com/claude-code) CLI (v1.0+)
 - Git
+- [uv](https://docs.astral.sh/uv/) (for ui-ux-pro-max Python scripts, auto-installed by most systems)
 
-**Optional (for frontend projects):**
-- `frontend-design` skill — installed separately via Claude Code skill registry
-- `ui-ux-pro-max` skill — installed separately, see [installation guide](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)
+**Frontend design support is bundled** — no separate installation needed. The `ui-ux-pro-max` skill is included in `bundled-skills/`, and `frontend-design` thinking is built into the brainstorming skill.
 
 ## Installation
 
@@ -133,11 +132,15 @@ dev-workflow/
 │   ├── bug-path.md                   ← Bug fix shortcut + upgrade flow
 │   └── conflict-rules-full.md        ← 15 conflict resolution rules
 └── bundled-skills/                   ← Customized sub-skills (required)
-    ├── brainstorming/SKILL.md
+    ├── brainstorming/SKILL.md        ← Includes frontend-design thinking
     ├── writing-plans/SKILL.md
     ├── executing-plans/SKILL.md
     ├── using-git-worktrees/SKILL.md
-    └── finishing-a-development-branch/SKILL.md
+    ├── finishing-a-development-branch/SKILL.md
+    └── ui-ux-pro-max/               ← Frontend design system (MIT, from nextlevelbuilder)
+        ├── SKILL.md
+        ├── data/                     ← Colors, typography, styles, UX guidelines
+        └── scripts/                  ← Python search & design system generation
 ```
 
 ## Compatibility with CLAUDE.md
@@ -152,7 +155,7 @@ To avoid duplication, you can remove the workflow definition from CLAUDE.md and 
 |---------|----------|
 | Skill doesn't trigger | Make sure the skill is in `~/.claude/skills/dev-workflow/` and the directory name matches exactly |
 | Phase handoff errors (e.g., "Phase 3+4" not recognized) | You may have the original Superpowers sub-skills installed. Replace them with the bundled versions from `bundled-skills/` |
-| `frontend-design` / `ui-ux-pro-max` not found | These are optional — only needed for frontend projects. Install them separately if needed |
+| `ui-ux-pro-max` scripts fail | Ensure `uv` is installed for Python runtime. Run `uv run <script-path>` instead of bare `python` |
 | Worktree creation fails | Check git is initialized in your project. The using-git-worktrees skill will fall back to working in the current directory |
 
 ## License

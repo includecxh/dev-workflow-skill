@@ -58,6 +58,8 @@ echo "[4/4] Installing bundled sub-skills..."
 
 BUNDLED_DIR="$SCRIPT_DIR/bundled-skills"
 SKILLS_TO_INSTALL=("brainstorming" "writing-plans" "executing-plans" "using-git-worktrees" "finishing-a-development-branch")
+# ui-ux-pro-max has no dual-mode logic, handle separately
+OPTIONAL_SKILLS=("ui-ux-pro-max")
 
 for skill in "${SKILLS_TO_INSTALL[@]}"; do
     if [ -d "$SKILLS_DIR/$skill" ]; then
@@ -79,6 +81,16 @@ for skill in "${SKILLS_TO_INSTALL[@]}"; do
 
     cp -r "$BUNDLED_DIR/$skill" "$SKILLS_DIR/$skill"
     echo "  ✅ $skill installed"
+done
+
+# 4b. Install optional frontend skill (ui-ux-pro-max)
+for skill in "${OPTIONAL_SKILLS[@]}"; do
+    if [ -d "$SKILLS_DIR/$skill" ]; then
+        echo "  ⏭️  $skill — already installed, skipping"
+        continue
+    fi
+    cp -r "$BUNDLED_DIR/$skill" "$SKILLS_DIR/$skill"
+    echo "  ✅ $skill installed (frontend design support)"
 done
 
 # 5. Verify

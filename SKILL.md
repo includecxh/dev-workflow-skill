@@ -20,6 +20,7 @@ Before processing any request, verify that the required sub-skills are available
 | `using-git-worktrees` | `using-git-worktrees/SKILL.md` | Phase 4 |
 | `executing-plans` | `executing-plans/SKILL.md` | Phase 5 |
 | `finishing-a-development-branch` | `finishing-a-development-branch/SKILL.md` | Phase 6+7/7 |
+| `ui-ux-pro-max` | `ui-ux-pro-max/SKILL.md` | Phase 1 (frontend projects) |
 
 **If all sub-skills are present**: Proceed normally.
 
