@@ -1,0 +1,14 @@
+# Test/eval data (not needed for installation)
+evals/
+
+# Eval workspace (generated during testing)
+*-workspace/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
