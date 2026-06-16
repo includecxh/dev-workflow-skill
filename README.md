@@ -2,6 +2,8 @@
 
 8-Phase Mandatory Development Workflow for Claude Code — with complexity-based routing.
 
+[中文文档](README.zh-CN.md)
+
 Every development request (new project, new feature, refactoring, or bug fix) is classified and routed through the right sequence of phases with proper gates. No phase is skipped, no gate is bypassed.
 
 ## How It Works
@@ -122,7 +124,8 @@ You: "Build a multi-currency bookkeeping app"
 ```
 dev-workflow/
 ├── SKILL.md                          ← Core orchestrator (~310 lines)
-├── README.md                         ← This file
+├── README.md                         ← This file (English)
+├── README.zh-CN.md                   ← Chinese documentation
 ├── install.sh                        ← macOS/Linux installer
 ├── install.ps1                       ← Windows installer
 ├── references/
