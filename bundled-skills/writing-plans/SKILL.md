@@ -15,7 +15,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Context:** If working in an isolated worktree, it should have been created via the `using-git-worktrees` skill at execution time.
 
-**Save plans to:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
+**Save plans to:** `docs/plans/YYYY-MM-DD-<feature-name>.md`
 - (User preferences for plan location override this default)
 
 ## Scope Check
@@ -150,6 +150,6 @@ Then invoke the executing-plans skill.
 ### 🔴 Sequential Mode (Complex)
 
 When Phase 0 assessed complexity as 🔴, phases run sequentially. After saving the plan, announce:
-> "Phase 3 complete. Plan saved to `docs/superpowers/plans/<filename>.md`. Moving to Phase 4: Worktree Isolation."
+> "Phase 3 complete. Plan saved to `docs/plans/<filename>.md`. Moving to Phase 4: Worktree Isolation."
 
 Then invoke the using-git-worktrees skill. After worktree setup completes (Phase 4), the using-git-worktrees skill will automatically hand off to Phase 5 (executing-plans).

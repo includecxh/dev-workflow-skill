@@ -105,7 +105,7 @@ Invoke the `brainstorming` skill. The mode depends on complexity:
 
 **🟢 Lite mode**: The brainstorming skill has a built-in Lite process for simple complexity. It does 2-3 quick questions + inline design confirmation. No separate design document needed.
 
-**🟡🔴 Standard mode**: Full brainstorming process — explore context, ask questions one at a time, propose 2-3 approaches, present design in sections, write design doc to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`, spec self-review, user review.
+**🟡🔴 Standard mode**: Full brainstorming process — explore context, ask questions one at a time, propose 2-3 approaches, present design in sections, write design doc to `docs/specs/YYYY-MM-DD-<topic>-design.md`, spec self-review, user review.
 
 **Frontend projects**: If the project involves ANY frontend or UI development — regardless of complexity level (🟢🟡🔴) — you MUST invoke both `frontend-design` (design thinking) and `ui-ux-pro-max` (design system generation) in sequence. Even a "simple" UI tweak can fall into common design anti-patterns; these skills prevent that. This applies to Lite mode too — a 🟢 simple frontend change still goes through both skills, though the design system output can be lighter. The brainstorming skill handles this invocation automatically within its process — you don't need to manage it separately.
 
@@ -151,7 +151,7 @@ For Lite mode details and examples, read `references/lite-modes.md`.
 
 **Write plan and set up workspace simultaneously** — they're independent tasks, so running them in parallel saves time.
 
-**Task A — Write Plan**: Invoke the `writing-plans` skill. It reads the approved design + spec confirmation and produces a micro-step execution plan (2-5 min per step, TDD format). Plan saved to `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`.
+**Task A — Write Plan**: Invoke the `writing-plans` skill. It reads the approved design + spec confirmation and produces a micro-step execution plan (2-5 min per step, TDD format). Plan saved to `docs/plans/YYYY-MM-DD-<feature-name>.md`.
 
 **Task B — Set Up Workspace**: Invoke the `using-git-worktrees` skill. It creates an isolated workspace, installs dependencies, and runs baseline tests.
 

@@ -35,7 +35,7 @@ Unlike the standard Phase 5 (which executes a formal plan from writing-plans), b
 4. **Implement the fix** — make the minimal change
 5. **Verify the fix** — confirm the bug is resolved and no regressions
 
-No formal plan file in `docs/superpowers/plans/`. The plan lives in the conversation.
+No formal plan file in `docs/plans/`. The plan lives in the conversation.
 
 **Use the `diagnose` skill** if the root cause isn't obvious. It helps systematically narrow down the problem.
 
