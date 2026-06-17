@@ -1,6 +1,6 @@
 ---
 name: dev-workflow
-description: "8-phase mandatory development workflow with complexity-based routing. Use this skill for ANY development request — new projects, new features, refactoring, or bug fixes. It classifies the request, assesses complexity (simple/standard/complex), and routes through the correct phase sequence with proper gates. Always invoke this skill when the user asks to build something, fix something, add a feature, or start a project — even if the request seems trivial. This skill ensures no phase is skipped and no gate is bypassed."
+description: "INVOKE when the user wants to: build a new project, add a feature, fix a bug, refactor code, or make any change to code — regardless of size or complexity. Phase 0 classifies the request type (new project / new feature / refactoring / bug fix) and complexity (🟢 simple / 🟡 standard / 🔴 complex), then routes through the correct gated phase sequence. DO NOT invoke when the user is: asking questions, exploring code without intent to change it, reading documentation, requesting explanations, or having a conversation with no code modification intended. When in doubt, invoke — Phase 0 will determine if the workflow is needed."
 ---
 
 # Dev Workflow — 8-Phase Mandatory Development Process
