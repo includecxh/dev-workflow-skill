@@ -30,8 +30,9 @@ Request arrives
 - **Lite mode for simple changes** — 2-3 questions + inline confirmation, no heavy docs
 - **Bug upgrade detection** — if a "simple bug" turns out to need architectural changes, the workflow forces a proper design process
 - **Rollback on path change** — abandoned paths are cleaned up, no stale files left behind
-- **Frontend design integration** — any project involving UI automatically uses `frontend-design` + `ui-ux-pro-max` skills
+- **Frontend design integration** — any project involving UI automatically uses `frontend-design` (thinking side: design philosophy & principles) + `ui-ux-pro-max` (practice side: design system & implementation) together
 - **Terminal state contracts** — every phase ends with a standard declaration, ensuring correct handoff
+- **Complexity misjudgment rollback** — if Phase 5 reveals the complexity was underestimated, all implemented code is rolled back and the flow restarts from Phase 0
 
 ## Prerequisites
 

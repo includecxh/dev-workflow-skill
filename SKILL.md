@@ -1,6 +1,6 @@
 ---
 name: dev-workflow
-description: "8-phase mandatory development workflow with complexity-based routing. Use this skill for ANY development request — new projects, new features, refactoring, or bug fixes. It classifies the request, assesses complexity (simple/standard/complex), and routes through the correct phase sequence with proper gates. Always invoke this skill when the user asks to build something, fix something, add a feature, or start a project — even if the request seems trivial. This skill ensures no phase is skipped and no gate is bypassed."
+description: "INVOKE when the user wants to: build a new project, add a feature, fix a bug, refactor code, or make any change to code — regardless of size or complexity. Phase 0 classifies the request type (new project / new feature / refactoring / bug fix) and complexity (🟢 simple / 🟡 standard / 🔴 complex), then routes through the correct gated phase sequence. DO NOT invoke when the user is: asking questions, exploring code without intent to change it, reading documentation, requesting explanations, or having a conversation with no code modification intended. When in doubt, invoke — Phase 0 will determine if the workflow is needed."
 ---
 
 # Dev Workflow — 8-Phase Mandatory Development Process
@@ -108,7 +108,15 @@ Invoke the `brainstorming` skill. The mode depends on complexity:
 
 **🟡🔴 Standard mode**: Full brainstorming process — explore context, ask questions one at a time, propose 2-3 approaches, present design in sections, write design doc to `docs/specs/YYYY-MM-DD-<topic>-design.md`, spec self-review, user review.
 
-**Frontend projects**: If the project involves ANY frontend or UI development — regardless of complexity level (🟢🟡🔴) — you MUST invoke both `frontend-design` (design thinking) and `ui-ux-pro-max` (design system generation) in sequence. Even a "simple" UI tweak can fall into common design anti-patterns; these skills prevent that. This applies to Lite mode too — a 🟢 simple frontend change still goes through both skills, though the design system output can be lighter. The brainstorming skill handles this invocation automatically within its process — you don't need to manage it separately.
+**Frontend projects**: If the project involves ANY frontend or UI development — regardless of complexity level (🟢🟡🔴) — you MUST invoke both `frontend-design` and `ui-ux-pro-max` together. They serve complementary roles:
+
+> **`frontend-design` = Thinking side (思想侧)**: Design philosophy, principles, anti-patterns, self-criticism loop, UX reasoning. Answers "why design it this way."
+>
+> **`ui-ux-pro-max` = Practice side (实践侧)**: Design system generation, color palettes, typography, component libraries, tech-stack adaptation. Answers "how to build it."
+>
+> **Cooperation logic**: Thinking side sets direction first → Practice side materializes it. Think before you build — avoids "fast but ugly."
+
+This applies to Lite mode too — a 🟢 simple frontend change still goes through both skills (though the design system output can be lighter). The brainstorming skill handles this invocation automatically within its process — you don't need to manage it separately.
 
 **Hard gate**: Design must be approved by the user before proceeding. No code, no implementation, no scaffolding until design approval.
 
@@ -278,9 +286,29 @@ When the workflow path changes mid-stream, you MUST roll back file changes made 
 | Scenario | What to Roll Back |
 |----------|-------------------|
 | Bug upgraded to 🟡+ feature | All Phase 5 bug fixes (code, tests, commits in worktree) |
+| **Complexity misjudged** (e.g., 🟢→🟡, 🟡→🔴) | All code implemented in current phase, related commits, plan files |
 | Design rejected in Phase 1, restarting | Design doc file, any prototype code generated |
 | Spec changes in Phase 2 requiring redesign | Phase 1 design doc if it conflicts with new specs |
 | User cancels current direction | All uncommitted work in current phase |
+
+**Complexity misjudgment detection** (pause and re-assess when these signals appear in Phase 5):
+
+- Need to add database tables not considered in Phase 0 → upgrade to at least 🟡
+- Need cross-module coordination assumed to be single-component → upgrade to at least 🟡
+- Need tech-stack decisions assumed to be inherited → upgrade to at least 🟡
+- Feature scope turns out much larger than estimated → re-assess complexity
+- User says "this is more complex than I thought" → pause immediately
+
+**When misjudgment is confirmed:**
+
+1. Pause all work immediately
+2. Explain the misjudgment to the user with specific evidence
+3. Confirm the new complexity level
+4. Roll back ALL code implemented under the wrong assessment
+5. Return to **Phase 0** to re-classify and re-assess
+6. The new flow starts from Phase 1 — no shortcuts, no carrying over code from the abandoned path
+
+> **Why rollback is mandatory**: Different complexity levels have different gate strictness. 🟢 fast lane skips many safeguards (simplified design, parallel planning). If the real complexity is 🟡, code produced under relaxed gates may lack proper spec confirmation and test coverage. Continuing without rollback = bypassing gates.
 
 **How to roll back:**
 
@@ -332,6 +360,8 @@ The full 15 rules with rationale are in `references/conflict-rules-full.md`. The
 6. **Complexity assessment is mandatory** — Phase 0 Step 2 cannot be skipped
 7. **Merged phases cannot be split** — 🟢🟡 must use parallel/merged mode
 8. **Complex projects must use all 8 phases** — 🔴 cannot skip or merge phases
+9. **frontend-design + ui-ux-pro-max are paired for frontend projects** — `frontend-design` is the **thinking side** (design philosophy, principles, anti-patterns); `ui-ux-pro-max` is the **practice side** (design system, colors, typography, components). Always invoke both together for any UI project, regardless of complexity. Thinking side first → Practice side second
+10. **Complexity misjudgment requires rollback** — if Phase 5 reveals the complexity was underestimated, roll back ALL implemented code and return to Phase 0 for re-classification. No carrying over code from the abandoned path
 
 ---
 
