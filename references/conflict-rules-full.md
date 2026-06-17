@@ -1,6 +1,6 @@
 # Conflict Resolution Rules — Full Reference
 
-These 15 rules resolve conflicts between this workflow, sub-skills, CLAUDE.md rules, and other configuration. When in doubt, these rules win.
+These 17 rules resolve conflicts between this workflow, sub-skills, CLAUDE.md rules, and other configuration. When in doubt, these rules win.
 
 ---
 
@@ -55,12 +55,18 @@ The `frontend-design` skill is only invoked when the project involves UI/fronten
 
 **When invoked**: During Phase 1 for design thinking, and during Phase 6 for final review.
 
+**`frontend-design` is the THINKING side (思想侧)**: It focuses on design philosophy, principles, anti-patterns, self-criticism loops, UX reasoning, and copywriting guidance. It answers "why design it this way." Must be invoked BEFORE `ui-ux-pro-max` to set the design direction.
+
 ## Rule 12: UI-UX-Pro-Max Only for Frontend Projects
 
 Same conditions as Rule 11. The `ui-ux-pro-max` skill is invoked:
 - During Phase 1: design system generation (after frontend-design sets the direction)
 - During Phase 5: tech stack implementation guide
 - During Phase 6: pre-delivery visual check
+
+**`ui-ux-pro-max` is the PRACTICE side (实践侧)**: It focuses on design materialization — color palettes, typography, component libraries, tech-stack adaptation, and visual systems. It answers "how to build it." Must be invoked AFTER `frontend-design` to materialize the design direction.
+
+**Rules 11 & 12 are paired**: For ANY frontend project (regardless of 🟢🟡🔴 complexity), both skills MUST be invoked together. Thinking side first → Practice side second. Even a 🟢 simple UI tweak requires both skills.
 
 ## Rule 13: Complexity Assessment Cannot Be Skipped
 
@@ -85,6 +91,34 @@ When Phase 0 assesses 🔴:
 
 Complex projects need independent gates because the risk of cross-contamination between phases is real. The extra time is the cost of managing complexity.
 
+## Rule 16: Frontend Skills Are Paired (Thinking + Practice)
+
+For ANY project involving frontend/UI, `frontend-design` and `ui-ux-pro-max` MUST be invoked together as a pair, regardless of complexity level (🟢🟡🔴).
+
+- **`frontend-design` = Thinking side**: Design philosophy, principles, anti-patterns, UX reasoning → "why design it this way"
+- **`ui-ux-pro-max` = Practice side**: Design system, colors, typography, components, tech stack → "how to build it"
+- **Order**: Thinking side first → Practice side second. Never invoke only one of them for a frontend project.
+- **Even 🟢 simple UI changes** require both skills (though the design system output can be lighter).
+
+## Rule 17: Complexity Misjudgment Requires Rollback
+
+If Phase 5 (or later) reveals that Phase 0's complexity assessment was wrong, the workflow MUST:
+
+1. **Pause immediately** — stop all work
+2. **Explain the misjudgment** to the user with specific evidence
+3. **Confirm the new complexity level** with the user
+4. **Roll back ALL code** implemented under the wrong assessment (worktree removal, git revert, etc.)
+5. **Return to Phase 0** for re-classification and re-assessment
+6. **Start fresh** — no carrying over code from the abandoned path
+
+**Why rollback is mandatory**: Different complexity levels have different gate strictness. Code produced under relaxed gates (🟢 fast lane) may lack proper spec confirmation and test coverage needed for 🟡 or 🔴. Continuing without rollback = bypassing gates retroactively.
+
+**Common misjudgment signals in Phase 5**:
+- Need new database tables not considered in Phase 0 → upgrade to at least 🟡
+- Need cross-module coordination assumed to be single-component → upgrade to at least 🟡
+- Need tech-stack decisions assumed to be inherited → upgrade to at least 🟡
+- Feature scope much larger than estimated → re-assess
+
 ---
 
 ## Conflict Resolution Priority Order
@@ -107,3 +141,5 @@ When multiple rules seem to conflict:
 | User asks for TDD during Phase 2 | Rule 6 | Remind: TDD is for Phase 5; Phase 2 is spec confirmation |
 | Bug fix turns into a feature | Bug upgrade rule | Return to Phase 0, re-classify, start fresh |
 | 🟡 project but user wants all 8 phases | Rule 14 | Respect user's preference — upgrade to 🔴 handling |
+| 🟢 UI tweak without frontend skills | Rule 16 | Must invoke both frontend-design + ui-ux-pro-max even for 🟢 |
+| Phase 5 reveals complexity was underestimated | Rule 17 | Roll back all code, return to Phase 0, re-classify |
