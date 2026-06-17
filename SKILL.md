@@ -38,6 +38,29 @@ Before processing any request, verify that the required sub-skills are available
 
 Development without structure leads to: skipped designs, untested code, unclear specs, and features that grow beyond their scope. This workflow enforces a minimum rigor at each stage — just enough to catch problems early, not so much that it becomes bureaucratic.
 
+## Continuous Execution Principle
+
+**All phases execute within a single prompt turn.** When a development request comes in, the workflow runs through every applicable phase from Phase 0 to Phase 8 without stopping between phases to wait for the user to submit a new prompt.
+
+**How this works in practice:**
+
+- **Phase transitions are automatic**: After completing a phase, immediately proceed to the next phase within the same response. Do NOT stop and wait for the user to type another prompt.
+- **Gates use inline confirmation**: Where a gate requires user approval (e.g., design approval in Phase 1, spec confirmation in Phase 2, complexity assessment in Phase 0), use AskUserQuestion or direct conversation to get confirmation within the same turn — do not defer it to the next prompt.
+- **Terminal state declarations are announcements, not stop points**: Statements like "Phase 0 complete. Moving to Phase 1" are log markers that signal phase completion to the user. They do NOT mean "stop here and wait." Immediately continue to the next phase after announcing.
+- **Long-running work uses background tasks**: When Phase 3+4 parallel tasks or Phase 5 execution steps take time, use background agents/parallel tool calls. The orchestrator (this skill) keeps running and coordinates results.
+- **The user can interrupt at any time**: If the user sends a new message while the workflow is running, treat it as an interruption. Address their input, then resume the workflow from where it was paused.
+
+**What NOT to do:**
+- ❌ Stop after Phase 0 and wait for the user to say "continue"
+- ❌ Announce "Phase 1 complete" and then stop, expecting the user to trigger Phase 2
+- ❌ Ask "Should I proceed to the next phase?" — just proceed, unless there's an actual gate that needs user input
+
+**Exceptions where pausing IS appropriate:**
+- Phase 1 design approval gate — the user must explicitly approve the design before coding begins
+- Phase 8 understanding check — the user must demonstrate understanding before the workflow ends
+- User explicitly asks to pause or take a break
+- An unexpected error or blocker is encountered that requires user guidance
+
 ## The Big Picture
 
 ```
@@ -68,7 +91,7 @@ Request arrives
 | **Refactoring** | Changing structure without changing behavior | Phase 2 |
 | **Bug / Small Change** | Fixing known issue, no new design needed | Phase 5 |
 
-**You must confirm the classification with the user** before proceeding. Example: "This is a new feature request. I'll follow the standard flow. Confirm?"
+**Use inline confirmation** (AskUserQuestion or direct ask) to confirm the classification with the user within the same turn. Example: "This is a new feature request. I'll follow the standard flow. Confirm?"
 
 ### Step 2: Complexity Assessment
 
@@ -90,7 +113,7 @@ Only required for new project, new feature, and refactoring. Bug/small changes s
 
 For the full signal reference with examples, read `references/complexity-signals.md`.
 
-**Confirm complexity with the user.** Example: "I assess this as 🟡 standard, following the standard lane. Agree?"
+**Confirm complexity with the user using inline confirmation** within the same turn. Example: "I assess this as 🟡 standard, following the standard lane. Agree?"
 
 ### Step 2 Output
 
@@ -118,9 +141,9 @@ Invoke the `brainstorming` skill. The mode depends on complexity:
 
 This applies to Lite mode too — a 🟢 simple frontend change still goes through both skills (though the design system output can be lighter). The brainstorming skill handles this invocation automatically within its process — you don't need to manage it separately.
 
-**Hard gate**: Design must be approved by the user before proceeding. No code, no implementation, no scaffolding until design approval.
+**Hard gate**: Design must be approved by the user (via inline confirmation within the same turn) before proceeding. No code, no implementation, no scaffolding until design approval. After approval, immediately continue to Phase 2 — do not stop and wait for a new prompt.
 
-**Terminal state**: "Phase 1 complete. Design approved. Moving to Phase 2: Specification Confirmation."
+**Terminal state**: "Phase 1 complete. Design approved. Moving to Phase 2: Specification Confirmation." — This is an announcement, not a stop point. Immediately proceed to Phase 2.
 
 ---
 
@@ -148,7 +171,7 @@ All 5 items must be explicitly confirmed:
 
 For Lite mode details and examples, read `references/lite-modes.md`.
 
-**Terminal state**: "Phase 2 complete. Moving to Phase 3+4: Prepare & Plan."
+**Terminal state**: "Phase 2 complete. Moving to Phase 3+4: Prepare & Plan." — This is an announcement, not a stop point. Immediately proceed to Phase 3+4 (or Phase 3 for 🔴).
 
 > Note: The terminal state declaration always says "Phase 3+4", but actual execution branches by complexity — 🟢🟡 enters Phase 3+4 in parallel, 🔴 enters Phase 3 sequentially.
 
@@ -164,19 +187,19 @@ For Lite mode details and examples, read `references/lite-modes.md`.
 
 **Task B — Set Up Workspace**: Invoke the `using-git-worktrees` skill. It creates an isolated workspace, installs dependencies, and runs baseline tests.
 
-When both tasks complete, announce: "Phase 3+4 complete. Moving to Phase 5: Execute Development."
+When both tasks complete, announce: "Phase 3+4 complete. Moving to Phase 5: Execute Development." — Then immediately proceed to Phase 5.
 
 For the full merged-phase details including coordination logic, read `references/merged-phases.md`.
 
 ### 🔴 Sequential Mode
 
-**Phase 3 first**: Invoke `writing-plans` skill. Wait for plan to be approved.
+**Phase 3 first**: Invoke `writing-plans` skill. Wait for plan to be approved (inline confirmation within same turn).
 
-Announce: "Phase 3 complete. Moving to Phase 4: Worktree Isolation."
+Announce: "Phase 3 complete. Moving to Phase 4: Worktree Isolation." — Then immediately proceed to Phase 4.
 
 **Phase 4 next**: Invoke `using-git-worktrees` skill. Wait for workspace to be ready.
 
-Announce: "Phase 4 complete. Moving to Phase 5: Execute Development."
+Announce: "Phase 4 complete. Moving to Phase 5: Execute Development." — Then immediately proceed to Phase 5.
 
 ---
 
@@ -191,7 +214,7 @@ Invoke the `executing-plans` skill. It loads the plan, executes each task step b
 - Stop and ask for help when blocked — don't guess
 - Never develop on main/master without explicit user consent
 
-**Terminal state** (depends on mode):
+**Terminal state** (depends on mode) — Announce then immediately proceed:
 
 🟢🟡: "Phase 5 complete. Moving to Phase 6+7: Verify & Finish."
 
@@ -214,7 +237,7 @@ Tests run once (covering both verification and merge-readiness). After code-revi
 
 The `finishing-a-development-branch` skill detects the merged mode and skips its own test verification (already done).
 
-**Terminal state**: "Phase 6+7 complete. Moving to Phase 8: Retrospective (复盘精读)."
+**Terminal state**: "Phase 6+7 complete. Moving to Phase 8: Retrospective (复盘精读)." — Then immediately proceed to Phase 8.
 
 ### 🔴 Sequential Mode
 
@@ -224,11 +247,11 @@ The `finishing-a-development-branch` skill detects the merged mode and skips its
 3. Check spec document updates
 4. Gate: review not passed → back to Phase 5
 
-**Terminal state**: "Phase 6 complete. Moving to Phase 7: Branch Completion."
+**Terminal state**: "Phase 6 complete. Moving to Phase 7: Branch Completion." — Then immediately proceed to Phase 7.
 
 **Phase 7 — Branch Completion**: Invoke `finishing-a-development-branch` skill. It runs its own test verification as a separate gate, then presents branch options.
 
-**Terminal state**: "Phase 7 complete. Moving to Phase 8: Retrospective (复盘精读)."
+**Terminal state**: "Phase 7 complete. Moving to Phase 8: Retrospective (复盘精读)." — Then immediately proceed to Phase 8.
 
 For full merged-phase details, read `references/merged-phases.md`.
 
@@ -259,7 +282,7 @@ Trace the complete chain for every feature implemented:
 
 **The user must demonstrate understanding of the main chain and key code responsibilities before moving on to the next feature.** This is not a test — it's a learning conversation. If the user can't explain it yet, walk through it again with different angles.
 
-**Terminal state**: "Phase 8 complete. Feature fully understood. Ready for next request."
+**Terminal state**: "Phase 8 complete. Feature fully understood. Ready for next request." — This is the true end of the workflow for this request.
 
 ---
 
@@ -335,7 +358,7 @@ When the workflow path changes mid-stream, you MUST roll back file changes made 
 
 ## Terminal State Chain Reference
 
-Every phase ends with a standard declaration. These declarations are the handoff contract between phases — they must match exactly.
+Every phase ends with a standard declaration. These declarations are **log announcements, not stop points** — after announcing, immediately proceed to the next phase within the same turn. The only gates that pause for user input are: Phase 0 classification confirmation, Phase 1 design approval, and Phase 8 understanding check.
 
 | Flow | Phase 0 → | Phase 1 → | Phase 2 → | Phase 3+4/3 → | Phase 4 → | Phase 5 → | Phase 6+7/6 → | Phase 7 → |
 |------|-----------|-----------|-----------|----------------|-----------|-----------|----------------|-----------|
@@ -344,7 +367,7 @@ Every phase ends with a standard declaration. These declarations are the handoff
 | 🟡 | 1 | 2 | 3+4 | 5 | 6+7 | 8 | - | - |
 | 🔴 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
 
-**Declaration format**: "Phase [N] complete. Moving to Phase [N+1]: [Name]."
+**Declaration format**: "Phase [N] complete. Moving to Phase [N+1]: [Name]." — Then immediately execute Phase [N+1].
 
 ---
 
