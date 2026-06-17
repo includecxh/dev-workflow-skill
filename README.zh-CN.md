@@ -136,7 +136,7 @@ dev-workflow/
 │   ├── lite-modes.md                 ← Phase 1 Lite + Phase 2 Lite 详情
 │   ├── merged-phases.md              ← Phase 3+4 并行 + Phase 6+7 合并
 │   ├── bug-path.md                   ← Bug 快捷路径 + 升级流程
-│   └── conflict-rules-full.md        ← 15 条冲突解决规则
+│   └── conflict-rules-full.md        ← 17 条冲突解决规则
 └── bundled-skills/                   ← 定制子技能（必需）
     ├── brainstorming/SKILL.md        ← 含 frontend-design 设计思维
     ├── writing-plans/SKILL.md

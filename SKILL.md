@@ -373,7 +373,7 @@ Every phase ends with a standard declaration. These declarations are **log annou
 
 ## Conflict Resolution Rules (Summary)
 
-The full 15 rules with rationale are in `references/conflict-rules-full.md`. The essential ones:
+The full 17 rules with rationale are in `references/conflict-rules-full.md`. The essential ones:
 
 1. **This workflow > skill auto-trigger** — if a skill wants to fire out of order, the workflow wins
 2. **This workflow > other CLAUDE.md rules** — on conflict, follow the workflow

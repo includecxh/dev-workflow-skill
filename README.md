@@ -134,7 +134,7 @@ dev-workflow/
 │   ├── lite-modes.md                 ← Phase 1 Lite + Phase 2 Lite details
 │   ├── merged-phases.md              ← Phase 3+4 parallel + Phase 6+7 combined
 │   ├── bug-path.md                   ← Bug fix shortcut + upgrade flow
-│   └── conflict-rules-full.md        ← 15 conflict resolution rules
+│   └── conflict-rules-full.md        ← 17 conflict resolution rules
 └── bundled-skills/                   ← Customized sub-skills (required)
     ├── brainstorming/SKILL.md        ← Includes frontend-design thinking
     ├── writing-plans/SKILL.md
