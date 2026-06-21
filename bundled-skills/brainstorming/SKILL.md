@@ -29,7 +29,7 @@ When Phase 0 assessed complexity as 🟢 (simple), use this streamlined process 
 - Multiple approach comparison (only one clear approach)
 - Separate design document (inline confirmation is sufficient)
 - Visual Companion offer
-- frontend-design / ui-ux-pro-max invocation
+- frontend-design / ui-ux-pro-max invocation — **EXCEPTION**: frontend projects MUST still invoke both even in Lite mode. `frontend-design` is always read in full (cheap, anti-default protection). `ui-ux-pro-max` uses a lightweight single `--domain` search in Lite mode (not the full `--design-system`). See "Frontend Design (Conditional)" below.
 
 **After approval in Lite mode**, announce: "Design confirmed. Moving to Phase 2: Specification Confirmation (Lite)."
 
@@ -188,36 +188,14 @@ A browser-based companion for showing mockups, diagrams, and visual options duri
 **Offering the companion:** When you anticipate that upcoming questions will involve visual content (mockups, layouts, diagrams), offer it once for consent:
 > "Some of what we're working on might be easier to explain if I can show it to you in a web browser. I can put together mockups, diagrams, comparisons, and other visuals as we go. This feature is still new and can be token-intensive. Want to try it? (Requires opening a local URL)"
 
-## Frontend Design Skills (Conditional)
+## Frontend Design (Conditional)
 
-**Only invoke these skills when the project involves UI/frontend development.** Pure backend, CLI, or database projects should NOT trigger them.
+When the project involves frontend/UI development, read and follow both bundled sub-skills (the orchestrator declares call order in Phase 1):
 
-When the project is determined to involve frontend development (during Step 1 "Explore project context" or Step 3 "Ask clarifying questions"), activate both skills in this order:
+- `bundled-skills/frontend-design/SKILL.md` — design thinking first
+- `bundled-skills/ui-ux-pro-max/SKILL.md` — design system after
 
-### 1. `frontend-design` — Design Thinking (invoke first)
-
-Use before making any visual design decisions. This skill provides:
-- **Anti-AI-default thinking**: Identifies the 3 most common AI design defaults (warm cream + serif + terracotta, dark + acid accent, broadsheet newspaper) and pushes you away from them
-- **Design process**: brainstorm → explore → plan → critique → build → critique again
-- **Token system**: Color (4-6 named hex values), Type (2+ faces with roles), Layout (prose + ASCII wireframes), Signature (one unique memorable element)
-- **Self-critique loop**: Review plan against brief before building — if any part reads like the generic default, revise it
-- **Writing guidance**: Copy is design material, not decoration
-
-### 2. `ui-ux-pro-max` — Design System Generation (invoke after direction is set)
-
-Once the design direction is established via `frontend-design`, generate a concrete design system:
-```bash
-uv run ~/.claude/skills/ui-ux-pro-max/scripts/search.py "<product_type> <industry> <keywords>" --design-system -p "Project Name"
-```
-
-This produces: style recommendation, color palette, typography, effects, anti-patterns, and (with `--persist`) a `design-system/MASTER.md` file that carries through Phase 5 and Phase 6.
-
-**The two skills are complementary, not competing:**
-- `frontend-design` = the design philosophy and process (how to think)
-- `ui-ux-pro-max` = the design data and system (what to use)
-- Always use `frontend-design` thinking FIRST, then ground it with `ui-ux-pro-max` data
-
-**This offer MUST be its own message.** Do not combine it with clarifying questions, context summaries, or any other content. The message should contain ONLY the offer above and nothing else. Wait for the user's response before continuing. If they decline, proceed with text-only brainstorming.
+Do NOT summarize their content here — read the full SKILL.md each time. Pure backend / CLI / database projects do not trigger them.
 
 **Per-question decision:** Even after the user accepts, decide FOR EACH QUESTION whether to use the browser or the terminal. The test: **would the user understand this better by seeing it than reading it?**
 
