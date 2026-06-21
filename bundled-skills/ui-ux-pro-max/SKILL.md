@@ -146,9 +146,9 @@ To save the design system for hierarchical retrieval across sessions, add `--per
 <runtime> ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name"
 ```
 
-This creates:
-- `design-system/MASTER.md` — Global Source of Truth with all design rules
-- `design-system/pages/` — Folder for page-specific overrides
+This creates (where `<project-slug>` = the `-p` project name lowercased with spaces → hyphens, e.g. `"My Cool App"` → `my-cool-app`):
+- `design-system/<project-slug>/MASTER.md` — Global Source of Truth with all design rules
+- `design-system/<project-slug>/pages/` — Folder for page-specific overrides
 
 **With page-specific override:**
 ```bash
@@ -156,12 +156,12 @@ This creates:
 ```
 
 This also creates:
-- `design-system/pages/dashboard.md` — Page-specific deviations from Master
+- `design-system/<project-slug>/pages/dashboard.md` — Page-specific deviations from Master
 
 **How hierarchical retrieval works:**
-1. When building a specific page (e.g., "Checkout"), first check `design-system/pages/checkout.md`
+1. When building a specific page (e.g., "Checkout"), first check `design-system/<project-slug>/pages/checkout.md`
 2. If the page file exists, its rules **override** the Master file
-3. If not, use `design-system/MASTER.md` exclusively
+3. If not, use `design-system/<project-slug>/MASTER.md` exclusively
 
 **🟢 Lite mode — use a single `--domain` search (lightweight)**:
 
