@@ -29,7 +29,7 @@ When Phase 0 assessed complexity as 🟢 (simple), use this streamlined process 
 - Multiple approach comparison (only one clear approach)
 - Separate design document (inline confirmation is sufficient)
 - Visual Companion offer
-- frontend-design / ui-ux-pro-max invocation — **EXCEPTION**: frontend projects MUST still invoke both even in Lite mode. `frontend-design` is always read in full (cheap, anti-default protection). `ui-ux-pro-max` uses a lightweight single `--domain` search in Lite mode (not the full `--design-system`). See "Frontend Design (Conditional)" below.
+- frontend-design / ui-ux-pro-max invocation — **EXCEPTION**: when Phase 0 Step 3 sets `is_frontend=true`, invoke both even in Lite mode. `frontend-design` is always read in full (cheap, anti-default protection). `ui-ux-pro-max` uses a lightweight single `--domain` search in Lite mode (not the full `--design-system`). See "Frontend Design (Conditional)" below.
 
 **After approval in Lite mode**, announce: "Design confirmed. Moving to Phase 2: Specification Confirmation (Lite)."
 
@@ -190,12 +190,12 @@ A browser-based companion for showing mockups, diagrams, and visual options duri
 
 ## Frontend Design (Conditional)
 
-When the project involves frontend/UI development, read and follow both bundled sub-skills (the orchestrator declares call order in Phase 1):
+When Phase 0 Step 3 sets `is_frontend=true`, read and follow both bundled sub-skills (the orchestrator declares call order in Phase 1):
 
 - `bundled-skills/frontend-design/SKILL.md` — design thinking first
 - `bundled-skills/ui-ux-pro-max/SKILL.md` — design system after
 
-Do NOT summarize their content here — read the full SKILL.md each time. Pure backend / CLI / database projects do not trigger them.
+Do NOT summarize their content here — read the full SKILL.md each time. Pure backend / CLI / database projects have `is_frontend=false` and do not trigger them.
 
 **Per-question decision:** Even after the user accepts, decide FOR EACH QUESTION whether to use the browser or the terminal. The test: **would the user understand this better by seeing it than reading it?**
 

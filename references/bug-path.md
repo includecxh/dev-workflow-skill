@@ -29,6 +29,8 @@ Only 3 phases instead of 6-8. Phases 1-4 are skipped entirely.
 
 Unlike the standard Phase 5 (which executes a formal plan from writing-plans), bug fixes use a **simplified in-memory fix plan**:
 
+> **Frontend bug?** The bug path still runs Phase 0 Step 3 (only Step 2 is skipped), so it has `is_frontend`. If `is_frontend=true`, read `bundled-skills/frontend-design/SKILL.md` + `bundled-skills/ui-ux-pro-max/SKILL.md` at **Lite level** (full frontend-design read + single `--domain` search) before fixing — this is the only frontend-skill anchor on the bug path, since Phase 1 is skipped.
+
 1. **Reproduce the bug** — confirm you can see the problem
 2. **Identify the root cause** — trace from symptom to source
 3. **Plan the fix** — what code to change and why (brief, in conversation)
