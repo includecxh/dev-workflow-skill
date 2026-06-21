@@ -93,28 +93,15 @@ Search specific domains using the CLI tool below.
 
 ## Prerequisites
 
-Check if Python is installed:
+This skill's search scripts require a Python runtime. The dev-workflow installer auto-detects the runtime and records it in `.runtime-config` (in the dev-workflow skill directory). Read that file first to determine which command prefix to use:
 
-```bash
-python3 --version || python --version
-```
+- `python_runtime=uv` → prefix all commands with `uv run`
+- `python_runtime=python3` (or `python`) → use `python3` (or `python`)
+- `python_runtime=none` → Python is unavailable; prompt the user to install uv: `https://docs.astral.sh/uv/getting-started/installation/`
 
-If Python is not installed, install it based on user's OS:
+If `.runtime-config` is missing, detect at invocation time: prefer `uv` (auto-manages Python), fall back to `python3` (must be real, not a Windows Store stub).
 
-**macOS:**
-```bash
-brew install python3
-```
-
-**Ubuntu/Debian:**
-```bash
-sudo apt update && sudo apt install python3
-```
-
-**Windows:**
-```powershell
-winget install Python.Python.3.12
-```
+**Path note**: In the bundled/isolated installation, scripts live at `~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py`. Use that full path. The short `skills/ui-ux-pro-max/...` paths in examples below are abbreviated for readability — replace with the full bundled path in practice.
 
 ---
 
@@ -130,12 +117,14 @@ Extract key information from user request:
 - **Industry**: healthcare, fintech, gaming, education, etc.
 - **Stack**: React, Vue, Next.js, or default to `html-tailwind`
 
-### Step 2: Generate Design System (REQUIRED)
+### Step 2: Generate Design System (mode-dependent)
 
-**Always start with `--design-system`** to get comprehensive recommendations with reasoning:
+The depth of design system generation depends on the dev-workflow complexity mode:
+
+**🟡🔴 Standard / Complex mode — use `--design-system`**:
 
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "<product_type> <industry> <keywords>" --design-system [-p "Project Name"]
+<runtime> ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "<product_type> <industry> <keywords>" --design-system [-p "Project Name"]
 ```
 
 This command:
@@ -146,7 +135,7 @@ This command:
 
 **Example:**
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "beauty spa wellness service" --design-system -p "Serenity Spa"
+uv run ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "beauty spa wellness service" --design-system -p "Serenity Spa"
 ```
 
 ### Step 2b: Persist Design System (Master + Overrides Pattern)
@@ -154,7 +143,7 @@ python3 skills/ui-ux-pro-max/scripts/search.py "beauty spa wellness service" --d
 To save the design system for hierarchical retrieval across sessions, add `--persist`:
 
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name"
+<runtime> ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name"
 ```
 
 This creates:
@@ -163,7 +152,7 @@ This creates:
 
 **With page-specific override:**
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name" --page "dashboard"
+<runtime> ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name" --page "dashboard"
 ```
 
 This also creates:
@@ -174,12 +163,30 @@ This also creates:
 2. If the page file exists, its rules **override** the Master file
 3. If not, use `design-system/MASTER.md` exclusively
 
+**🟢 Lite mode — use a single `--domain` search (lightweight)**:
+
+In Lite mode (simple complexity), do NOT run the full `--design-system`. Instead, pick the ONE domain most relevant to the change and run a single lightweight search:
+
+```bash
+<runtime> ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain>
+```
+
+| Change type | Domain | Example |
+|-------------|--------|---------|
+| Color tweak | `color` | `--domain color "saas"` |
+| Style adjustment | `style` | `--domain style "minimalism"` |
+| Font change | `typography` | `--domain typography "elegant"` |
+| Layout/structure | `landing` | `--domain landing "hero"` |
+| UX/interaction | `ux` | `--domain ux "animation"` |
+
+This returns 1-3 focused results — enough to guide a single micro-change without the overhead of generating a full MASTER.md. `frontend-design` (read in full) still provides the design-thinking guardrails.
+
 ### Step 3: Supplement with Detailed Searches (as needed)
 
 After getting the design system, use domain searches to get additional details:
 
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [-n <max_results>]
+<runtime> ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [-n <max_results>]
 ```
 
 **When to use detailed searches:**
@@ -197,7 +204,7 @@ python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [-n
 Get implementation-specific best practices. If user doesn't specify a stack, **default to `html-tailwind`**.
 
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack html-tailwind
+<runtime> ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack html-tailwind
 ```
 
 Available stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`, `react-native`, `flutter`, `shadcn`, `jetpack-compose`
@@ -248,10 +255,12 @@ Available stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`
 - Industry: Beauty/Wellness
 - Stack: html-tailwind (default)
 
-### Step 2: Generate Design System (REQUIRED)
+### Step 2: Generate Design System (mode-dependent)
+
+> Note: `<runtime>` is the prefix from `.runtime-config` — typically `uv run` (preferred) or `python3`. The example below uses `uv run` (most common detected runtime).
 
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "beauty spa wellness service elegant" --design-system -p "Serenity Spa"
+uv run ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "beauty spa wellness service elegant" --design-system -p "Serenity Spa"
 ```
 
 **Output:** Complete design system with pattern, style, colors, typography, effects, and anti-patterns.
@@ -260,16 +269,16 @@ python3 skills/ui-ux-pro-max/scripts/search.py "beauty spa wellness service eleg
 
 ```bash
 # Get UX guidelines for animation and accessibility
-python3 skills/ui-ux-pro-max/scripts/search.py "animation accessibility" --domain ux
+<runtime> ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "animation accessibility" --domain ux
 
 # Get alternative typography options if needed
-python3 skills/ui-ux-pro-max/scripts/search.py "elegant luxury serif" --domain typography
+<runtime> ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "elegant luxury serif" --domain typography
 ```
 
 ### Step 4: Stack Guidelines
 
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "layout responsive form" --stack html-tailwind
+<runtime> ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "layout responsive form" --stack html-tailwind
 ```
 
 **Then:** Synthesize design system + detailed searches and implement the design.
@@ -282,10 +291,10 @@ The `--design-system` flag supports two output formats:
 
 ```bash
 # ASCII box (default) - best for terminal display
-python3 skills/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system
+<runtime> ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system
 
 # Markdown - best for documentation
-python3 skills/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system -f markdown
+<runtime> ~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system -f markdown
 ```
 
 ---

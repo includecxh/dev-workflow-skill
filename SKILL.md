@@ -9,28 +9,56 @@ This skill is the **orchestrator** for a structured development workflow. It doe
 
 Think of it as a project manager who knows exactly which specialist to call at each stage, and won't let anyone skip ahead.
 
+## Sub-Skill Resolution
+
+All sub-skills are **bundled within this skill's directory** — they are NOT installed as separate global skills. This means:
+
+1. **Zero pollution**: Installing dev-workflow does not overwrite any existing skills the user may have (e.g., a standalone Superpowers brainstorming).
+2. **Self-contained**: Everything lives under `~/.claude/skills/dev-workflow/bundled-skills/`.
+
+When this skill or any bundled sub-skill references another skill by name (e.g., "invoke brainstorming", "use frontend-design"), **resolve it by reading the bundled file**:
+
+```
+Read ~/.claude/skills/dev-workflow/bundled-skills/<skill-name>/SKILL.md and follow its instructions.
+```
+
+**Do NOT** use the Skill tool to invoke bundled sub-skills — they are not installed in the global skills directory.
+
+| Skill Name | Bundled Path |
+|------------|-------------|
+| brainstorming | `bundled-skills/brainstorming/SKILL.md` |
+| writing-plans | `bundled-skills/writing-plans/SKILL.md` |
+| using-git-worktrees | `bundled-skills/using-git-worktrees/SKILL.md` |
+| executing-plans | `bundled-skills/executing-plans/SKILL.md` |
+| finishing-a-development-branch | `bundled-skills/finishing-a-development-branch/SKILL.md` |
+| frontend-design | `bundled-skills/frontend-design/SKILL.md` |
+| ui-ux-pro-max | `bundled-skills/ui-ux-pro-max/SKILL.md` |
+
+**Python runtime for ui-ux-pro-max**: The ui-ux-pro-max skill requires Python to run its search scripts (`scripts/search.py`). Before invoking it, check `.runtime-config` in this skill's directory for the detected Python runtime. If the file doesn't exist, detect the runtime at invocation time by checking: (1) `uv` available → use `uv run`, (2) `python3` available and real (not a Windows Store stub) → use `python3`, (3) neither → prompt the user to install uv.
+
+---
+
 ## Startup Dependency Check
 
-Before processing any request, verify that the required sub-skills are available. Check for these files under `~/.claude/skills/`:
+Before processing any request, verify that the required sub-skill files are available within this skill's `bundled-skills/` directory. Check for these files under `~/.claude/skills/dev-workflow/`:
 
 | Sub-Skill | Required File | Used In |
 |-----------|--------------|---------|
-| `brainstorming` | `brainstorming/SKILL.md` | Phase 1 |
-| `writing-plans` | `writing-plans/SKILL.md` | Phase 3 |
-| `using-git-worktrees` | `using-git-worktrees/SKILL.md` | Phase 4 |
-| `executing-plans` | `executing-plans/SKILL.md` | Phase 5 |
-| `finishing-a-development-branch` | `finishing-a-development-branch/SKILL.md` | Phase 6+7/7 |
-| `ui-ux-pro-max` | `ui-ux-pro-max/SKILL.md` | Phase 1 (frontend projects) |
+| `brainstorming` | `bundled-skills/brainstorming/SKILL.md` | Phase 1 |
+| `writing-plans` | `bundled-skills/writing-plans/SKILL.md` | Phase 3 |
+| `using-git-worktrees` | `bundled-skills/using-git-worktrees/SKILL.md` | Phase 4 |
+| `executing-plans` | `bundled-skills/executing-plans/SKILL.md` | Phase 5 |
+| `finishing-a-development-branch` | `bundled-skills/finishing-a-development-branch/SKILL.md` | Phase 6+7/7 |
+| `frontend-design` | `bundled-skills/frontend-design/SKILL.md` | Phase 1 (frontend projects) |
+| `ui-ux-pro-max` | `bundled-skills/ui-ux-pro-max/SKILL.md` | Phase 1 (frontend projects) |
 
-**If all sub-skills are present**: Proceed normally.
+**If all sub-skill files are present**: Proceed normally.
 
-**If some sub-skills are missing**: Report which ones are missing and suggest the fix:
+**If some sub-skill files are missing**: Report which ones are missing and suggest the fix:
 
-> "⚠️ dev-workflow requires these sub-skills but they are not installed: [list]. Install them by running the install script from the dev-workflow directory, or copy the bundled-skills/ sub-folders to ~/.claude/skills/."
+> "⚠️ dev-workflow requires these bundled sub-skills but they are missing: [list]. Re-run the install script or verify the installation at ~/.claude/skills/dev-workflow/bundled-skills/."
 
-**If sub-skills exist but lack dual-mode support** (no "Merged" or "Sequential" mentions in their SKILL.md): Warn the user:
-
-> "⚠️ The installed [skill-name] appears to be the original Superpowers version. The dev-workflow requires the customized version with merged/sequential dual-mode support. Phase handoffs may not work correctly. Replace it with the version from bundled-skills/."
+**Python runtime check for ui-ux-pro-max**: If `.runtime-config` exists in this skill's directory, it records the detected Python runtime (`python_runtime=uv` or `python_runtime=python3`). If not, runtime detection will be performed before invoking ui-ux-pro-max (see Sub-Skill Resolution section above).
 
 **Phases 0, 2, and 8 are self-contained** — they work without any sub-skills. A partial installation is functional but incomplete.
 
@@ -123,15 +151,15 @@ After both steps, announce the classification result:
 
 ---
 
-## Phase 1: Design — Invoke `brainstorming` Skill
+## Phase 1: Design — Read `bundled-skills/brainstorming/SKILL.md`
 
-Invoke the `brainstorming` skill. The mode depends on complexity:
+Read `bundled-skills/brainstorming/SKILL.md` and follow its instructions. The mode depends on complexity:
 
 **🟢 Lite mode**: The brainstorming skill has a built-in Lite process for simple complexity. It does 2-3 quick questions + inline design confirmation. No separate design document needed.
 
 **🟡🔴 Standard mode**: Full brainstorming process — explore context, ask questions one at a time, propose 2-3 approaches, present design in sections, write design doc to `docs/specs/YYYY-MM-DD-<topic>-design.md`, spec self-review, user review.
 
-**Frontend projects**: If the project involves ANY frontend or UI development — regardless of complexity level (🟢🟡🔴) — you MUST invoke both `frontend-design` and `ui-ux-pro-max` together. They serve complementary roles:
+**Frontend projects**: If the project involves ANY frontend or UI development — regardless of complexity level (🟢🟡🔴) — you MUST read and follow both `bundled-skills/frontend-design/SKILL.md` and `bundled-skills/ui-ux-pro-max/SKILL.md`. They serve complementary roles:
 
 > **`frontend-design` = Thinking side (思想侧)**: Design philosophy, principles, anti-patterns, self-criticism loop, UX reasoning. Answers "why design it this way."
 >
@@ -139,7 +167,7 @@ Invoke the `brainstorming` skill. The mode depends on complexity:
 >
 > **Cooperation logic**: Thinking side sets direction first → Practice side materializes it. Think before you build — avoids "fast but ugly."
 
-This applies to Lite mode too — a 🟢 simple frontend change still goes through both skills (though the design system output can be lighter). The brainstorming skill handles this invocation automatically within its process — you don't need to manage it separately.
+This applies to Lite mode too — a 🟢 simple frontend change still goes through both skills (though the design system output can be lighter). The brainstorming sub-skill handles this invocation automatically within its process — you don't need to manage it separately. When calling ui-ux-pro-max scripts, use the runtime detected in `.runtime-config` (see Sub-Skill Resolution section).
 
 **Hard gate**: Design must be approved by the user (via inline confirmation within the same turn) before proceeding. No code, no implementation, no scaffolding until design approval. After approval, immediately continue to Phase 2 — do not stop and wait for a new prompt.
 
@@ -183,9 +211,9 @@ For Lite mode details and examples, read `references/lite-modes.md`.
 
 **Write plan and set up workspace simultaneously** — they're independent tasks, so running them in parallel saves time.
 
-**Task A — Write Plan**: Invoke the `writing-plans` skill. It reads the approved design + spec confirmation and produces a micro-step execution plan (2-5 min per step, TDD format). Plan saved to `docs/plans/YYYY-MM-DD-<feature-name>.md`.
+**Task A — Write Plan**: Read `bundled-skills/writing-plans/SKILL.md` and follow its instructions. It reads the approved design + spec confirmation and produces a micro-step execution plan (2-5 min per step, TDD format). Plan saved to `docs/plans/YYYY-MM-DD-<feature-name>.md`.
 
-**Task B — Set Up Workspace**: Invoke the `using-git-worktrees` skill. It creates an isolated workspace, installs dependencies, and runs baseline tests.
+**Task B — Set Up Workspace**: Read `bundled-skills/using-git-worktrees/SKILL.md` and follow its instructions. It creates an isolated workspace, installs dependencies, and runs baseline tests.
 
 When both tasks complete, announce: "Phase 3+4 complete. Moving to Phase 5: Execute Development." — Then immediately proceed to Phase 5.
 
@@ -193,19 +221,19 @@ For the full merged-phase details including coordination logic, read `references
 
 ### 🔴 Sequential Mode
 
-**Phase 3 first**: Invoke `writing-plans` skill. Wait for plan to be approved (inline confirmation within same turn).
+**Phase 3 first**: Read `bundled-skills/writing-plans/SKILL.md` and follow its instructions. Wait for plan to be approved (inline confirmation within same turn).
 
 Announce: "Phase 3 complete. Moving to Phase 4: Worktree Isolation." — Then immediately proceed to Phase 4.
 
-**Phase 4 next**: Invoke `using-git-worktrees` skill. Wait for workspace to be ready.
+**Phase 4 next**: Read `bundled-skills/using-git-worktrees/SKILL.md` and follow its instructions. Wait for workspace to be ready.
 
 Announce: "Phase 4 complete. Moving to Phase 5: Execute Development." — Then immediately proceed to Phase 5.
 
 ---
 
-## Phase 5: Execute Development — Invoke `executing-plans` Skill
+## Phase 5: Execute Development — Read `bundled-skills/executing-plans/SKILL.md`
 
-Invoke the `executing-plans` skill. It loads the plan, executes each task step by step with TDD (red → green → refactor), and verifies each step before marking it complete.
+Read `bundled-skills/executing-plans/SKILL.md` and follow its instructions. It loads the plan, executes each task step by step with TDD (red → green → refactor), and verifies each step before marking it complete.
 
 **Core rules during execution**:
 - One minimum viable loop at a time
@@ -233,7 +261,7 @@ Tests run once (covering both verification and merge-readiness). After code-revi
 3. Code review (correctness + reuse + efficiency)
 4. Check if spec documents need updating
 5. If tests/review fail → back to Phase 5 to fix
-6. If all pass → invoke `finishing-a-development-branch` skill for branch management
+6. If all pass → read `bundled-skills/finishing-a-development-branch/SKILL.md` and follow its instructions for branch management
 
 The `finishing-a-development-branch` skill detects the merged mode and skips its own test verification (already done).
 
@@ -249,7 +277,7 @@ The `finishing-a-development-branch` skill detects the merged mode and skips its
 
 **Terminal state**: "Phase 6 complete. Moving to Phase 7: Branch Completion." — Then immediately proceed to Phase 7.
 
-**Phase 7 — Branch Completion**: Invoke `finishing-a-development-branch` skill. It runs its own test verification as a separate gate, then presents branch options.
+**Phase 7 — Branch Completion**: Read `bundled-skills/finishing-a-development-branch/SKILL.md` and follow its instructions. It runs its own test verification as a separate gate, then presents branch options.
 
 **Terminal state**: "Phase 7 complete. Moving to Phase 8: Retrospective (复盘精读)." — Then immediately proceed to Phase 8.
 
@@ -390,17 +418,19 @@ The full 17 rules with rationale are in `references/conflict-rules-full.md`. The
 
 ## Sub-Skill Dependency Map
 
-This skill orchestrates these sub-skills. They must be installed for full functionality:
+All sub-skills are bundled within this skill's `bundled-skills/` directory. They are NOT installed globally — they are resolved by reading their SKILL.md files at invocation time (see Sub-Skill Resolution section).
 
-| Skill | Phase | Trigger Mode | Purpose |
-|-------|-------|-------------|---------|
-| `brainstorming` | Phase 1 | Invoked by this skill | Design clarification |
-| `writing-plans` | Phase 3 | Invoked by this skill | Create execution plan |
-| `using-git-worktrees` | Phase 4 | Invoked by this skill | Isolated workspace |
-| `executing-plans` | Phase 5 | Invoked by this skill | Execute plan with TDD |
-| `finishing-a-development-branch` | Phase 6+7/7 | Invoked by this skill | Branch completion |
+| Skill | Phase | Resolution Path | Purpose |
+|-------|-------|----------------|---------|
+| `brainstorming` | Phase 1 | `bundled-skills/brainstorming/SKILL.md` | Design clarification |
+| `writing-plans` | Phase 3 | `bundled-skills/writing-plans/SKILL.md` | Create execution plan |
+| `using-git-worktrees` | Phase 4 | `bundled-skills/using-git-worktrees/SKILL.md` | Isolated workspace |
+| `executing-plans` | Phase 5 | `bundled-skills/executing-plans/SKILL.md` | Execute plan with TDD |
+| `finishing-a-development-branch` | Phase 6+7/7 | `bundled-skills/finishing-a-development-branch/SKILL.md` | Branch completion |
+| `frontend-design` | Phase 1 | `bundled-skills/frontend-design/SKILL.md` | Design thinking & anti-default direction |
+| `ui-ux-pro-max` | Phase 1 | `bundled-skills/ui-ux-pro-max/SKILL.md` | Design system generation (requires Python runtime) |
 
-**If a sub-skill is not installed**: The phase that depends on it will need to be executed manually. Phases 0, 2, and 8 are self-contained and always work.
+**If a bundled sub-skill file is missing**: The installation may be corrupt. Re-run the install script to restore the bundled-skills/ directory.
 
 ---
 
