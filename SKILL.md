@@ -143,11 +143,30 @@ For the full signal reference with examples, read `references/complexity-signals
 
 **Confirm complexity with the user using inline confirmation** within the same turn. Example: "I assess this as 🟡 standard, following the standard lane. Agree?"
 
-### Step 2 Output
+### Step 3: Frontend Assessment
 
-After both steps, announce the classification result:
+**Applies to ALL types — including Bug/small changes.** Unlike Step 2 (which bugs skip), Step 3 runs for every request. This is mandatory: frontend bugs still need frontend skills (rule 9), but the bug path skips Phase 1 — so Phase 0 is the only place that can set the flag Phase 5 will read.
 
-> "Phase 0 complete. Classification: **[type]**, Complexity: **[level]**, Flow: **[path]**. Moving to [next phase]."
+Use the "ANY frontend or UI development" standard (strict, same as rule 9). Ask the user one inline yes/no question. When in doubt about edge cases, default to **yes** — it's safer to trigger frontend skills than to miss them (a silent miss breaks rule 9; a false trigger only costs an extra read).
+
+Ask exactly:
+
+> **Does this request involve ANY frontend or UI development?** (yes/no)
+> - **yes** — e.g., changing a button's color/layout, building a React/Vue page, a mobile app screen, a TUI dashboard
+> - **yes** — e.g., an API + a small admin panel, SSR with templates rendered to the browser, React Native
+> - **no** — e.g., a CLI flag change, a pure REST/GraphQL backend service, a database migration script
+>
+> Edge cases (SSR, hybrid API+UI, mobile, TUI) count as **yes**.
+
+**Output**: `is_frontend` (bool). Consumers:
+- **Phase 1** (brainstorming): when `true`, reads `bundled-skills/frontend-design/SKILL.md` + `bundled-skills/ui-ux-pro-max/SKILL.md` (Lite level in 🟢)
+- **Phase 5** (bug path): when `true`, reads both frontend skills at entry before fixing (Lite level)
+
+### Phase 0 Output
+
+After all three steps, announce the classification result:
+
+> "Phase 0 complete. Classification: **[type]**, Complexity: **[level]**, Frontend: **[yes/no]**, Flow: **[path]**. Moving to [next phase]."
 
 ---
 
@@ -167,7 +186,7 @@ Read `bundled-skills/brainstorming/SKILL.md` and follow its instructions. The mo
 >
 > **Cooperation logic**: Thinking side sets direction first → Practice side materializes it. Think before you build — avoids "fast but ugly."
 
-This applies to Lite mode too — a 🟢 simple frontend change still goes through both skills (though the design system output can be lighter). The brainstorming sub-skill handles this invocation automatically within its process — you don't need to manage it separately. When calling ui-ux-pro-max scripts, use the runtime detected in `.runtime-config` (see Sub-Skill Resolution section).
+This applies to Lite mode too — a 🟢 simple frontend change still goes through both skills (though the design system output can be lighter). **Trigger source**: Phase 0's Step 3 sets `is_frontend`. When `is_frontend=true`, the brainstorming sub-skill reads both frontend skills (Lite level: single `--domain` + full frontend-design read) — you don't need to manage it separately. When calling ui-ux-pro-max scripts, use the runtime detected in `.runtime-config` (see Sub-Skill Resolution section).
 
 **Hard gate**: Design must be approved by the user (via inline confirmation within the same turn) before proceeding. No code, no implementation, no scaffolding until design approval. After approval, immediately continue to Phase 2 — do not stop and wait for a new prompt.
 
@@ -241,6 +260,8 @@ Read `bundled-skills/executing-plans/SKILL.md` and follow its instructions. It l
 - Commit with standard prefixes (feat/fix/refactor) describing business motivation and scope
 - Stop and ask for help when blocked — don't guess
 - Never develop on main/master without explicit user consent
+
+**Frontend skills for bug path**: If Phase 0 set `is_frontend=true` (the bug path skips Phase 1, so this flag is the only trigger), read `bundled-skills/frontend-design/SKILL.md` + `bundled-skills/ui-ux-pro-max/SKILL.md` at entry before fixing — at **Lite level** (full frontend-design read + single `--domain` search, not full `--design-system`), matching the Lite exception in brainstorming.
 
 **Terminal state** (depends on mode) — Announce then immediately proceed:
 
