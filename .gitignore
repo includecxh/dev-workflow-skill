@@ -17,3 +17,7 @@ Thumbs.db
 # Records the detected Python runtime (uv/python3/none) for ui-ux-pro-max.
 # Each machine has its own — never commit.
 .runtime-config
+
+# Python bytecode cache (generated when running ui-ux-pro-max search scripts)
+__pycache__/
+*.pyc
