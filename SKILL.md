@@ -24,6 +24,21 @@ Read ~/.claude/skills/dev-workflow/bundled-skills/<skill-name>/SKILL.md and foll
 
 **Do NOT** use the Skill tool to invoke bundled sub-skills — they are not installed in the global skills directory.
 
+### Sub-Skill Boundary Principle
+
+**This orchestrator owns all phase transitions.** Sub-skills execute the *content* of their assigned phase — they do NOT command phase flow. Concretely, a sub-skill MUST NOT:
+
+- **Invoke the next sub-skill** itself (e.g., a Phase 3 skill must not call "invoke executing-plans") — the orchestrator decides what runs next.
+- **Declare other phases as gates** (e.g., "Phase 2 MUST occur, hard gate") — gate declarations belong to the orchestrator.
+- **Select downstream phase modes** (e.g., "Phase 3+4 runs in parallel for 🟢🟡") — mode selection is the orchestrator's job, based on Phase 0's complexity.
+- **Describe other phases' content** (e.g., listing Phase 8's checklist from inside a Phase 7 skill) — each phase is described by the orchestrator, not by its predecessor.
+
+**What a sub-skill MAY do (allowed):**
+- **Self-locate**: state "this skill is Phase N" for context.
+- **Announce its own completion**: "Phase N complete. Handing back to orchestrator." — then STOP. The orchestrator drives what comes next.
+
+**Why**: these sub-skills originated as standalone skills (which needed to drive their own next step). Bundled into dev-workflow, that self-driving logic became overreach — it duplicated the orchestrator's flow control and caused contradictions (e.g., a sub-skill's terminal state pointing past a gate the orchestrator mandates). Each sub-skill should be a focused executor; the orchestrator is the conductor.
+
 | Skill Name | Bundled Path |
 |------------|-------------|
 | brainstorming | `bundled-skills/brainstorming/SKILL.md` |
