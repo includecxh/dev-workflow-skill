@@ -1,6 +1,6 @@
 ---
 name: finishing-a-development-branch
-description: "Use in Phase 6+7 (merged, 🟢🟡) or Phase 7 (separate, 🔴) of the 8-phase mandatory development workflow. In merged mode, tests have already been run once — do NOT re-run the full test suite. In separate mode (🔴), verify tests before presenting options."
+description: "Use in Phase 6+7 (merged, 🟢🟡) or Phase 7 (separate, 🔴) of the 8-phase mandatory development workflow. In merged mode, skip test re-run ONLY if Phase 6+7 had no Phase 5 round-trip (code unchanged since step-1 test); if code-review failed and was fixed in Phase 5, re-run the full suite as a gate. In separate mode (🔴), verify tests before presenting options."
 ---
 
 # Finishing a Development Branch
@@ -17,8 +17,9 @@ Guide completion of development work by presenting clear options and handling ch
 
 ### Step 1: Verify Tests
 
-**Mode detection:** Check which mode the workflow is in:
-- **🟢🟡 Merged mode (Phase 6+7):** Tests were already run as part of the merged verification. Skip to Step 2.
+**Mode detection:** Check which mode the workflow is in, AND whether Phase 6+7 had a Phase 5 round-trip (i.e., code-review failed and code was fixed in Phase 5 before reaching this skill):
+- **🟢🟡 Merged mode, NO Phase 5 round-trip:** Tests were already run as part of the merged verification and code hasn't changed since. Skip to Step 2.
+- **🟢🟡 Merged mode, WITH Phase 5 round-trip:** Code was fixed in Phase 5 after the step-1 test ran, so the prior test result is stale. Run the full test suite now as a gate (do NOT skip).
 - **🔴 Sequential mode (Phase 7):** Run the full test suite as a separate gate.
 
 **🔴 Sequential mode only — Before presenting options, verify tests pass:**
