@@ -265,6 +265,13 @@ Read `bundled-skills/executing-plans/SKILL.md` and follow its instructions. It l
 
 **Frontend skills for bug path**: If Phase 0 set `is_frontend=true` (the bug path skips Phase 1, so this flag is the only trigger), read `bundled-skills/frontend-design/SKILL.md` + `bundled-skills/ui-ux-pro-max/SKILL.md` at entry before fixing — at **Lite level** (full frontend-design read + single `--domain` search, not full `--design-system`), matching the Lite exception in brainstorming.
 
+**Frontend skills for standard path** (🟡🔴, not bug, not Lite): When `is_frontend=true` and entering Phase 5 via the standard path (i.e., Phase 1 already ran `--design-system --persist` per PR #9), consume the persisted design system instead of re-generating:
+1. **Read** `design-system/<project-slug>/MASTER.md` — design principles, colors, typography, anti-patterns (the file exists per the Phase 1 `--persist` mandate)
+2. **Run ONE** `--stack <stack>` search at entry (default `html-tailwind` if the project stack is unspecified; adjust to react/nextjs/vue/etc. per the actual project) — implementation guidance for the chosen stack; keep the result in conversation for subsequent steps to reference
+3. Subsequent TDD steps reference both; do **NOT** re-run `--design-system` or `--stack` per step (avoids token accumulation)
+
+This dual-track exists because MASTER.md (design) and `--stack` (implementation) are orthogonal — reading only MASTER would drop stack-specific guidance (misaligning rule 12).
+
 **Terminal state** (depends on mode) — Announce then immediately proceed:
 
 🟢🟡: "Phase 5 complete. Moving to Phase 6+7: Verify & Finish."
@@ -280,7 +287,7 @@ Read `bundled-skills/executing-plans/SKILL.md` and follow its instructions. It l
 Tests run once (covering both verification and merge-readiness). After code-review passes, branch management options are presented directly.
 
 1. Run test suite (once, serves both verification and merge-check)
-2. Puppeteer frontend validation if UI exists (screenshot + interaction + end-to-end)
+2. Puppeteer frontend validation if UI exists (screenshot + interaction + end-to-end). If `is_frontend=true`, also cross-check the screenshot against `design-system/<project-slug>/MASTER.md` anti-patterns section — report any violation before "all pass"
 3. Code review (correctness + reuse + efficiency)
 4. Check if spec documents need updating
 5. If tests/review fail → back to Phase 5 to fix
@@ -293,7 +300,7 @@ The `finishing-a-development-branch` skill detects the merged mode and skips its
 ### 🔴 Sequential Mode
 
 **Phase 6 — Verification & Review** (independent gate):
-1. Puppeteer frontend validation if UI exists
+1. Puppeteer frontend validation if UI exists. If `is_frontend=true`, also cross-check the screenshot against `design-system/<project-slug>/MASTER.md` anti-patterns section — report any violation before proceeding
 2. Run verify skill + code-review skill
 3. Check spec document updates
 4. Gate: review not passed → back to Phase 5
