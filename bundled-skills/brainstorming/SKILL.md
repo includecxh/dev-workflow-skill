@@ -31,9 +31,9 @@ When Phase 0 assessed complexity as 🟢 (simple), use this streamlined process 
 - Visual Companion offer
 - frontend-design / ui-ux-pro-max invocation — **EXCEPTION**: when Phase 0 Step 3 sets `is_frontend=true`, invoke both even in Lite mode. `frontend-design` is always read in full (cheap, anti-default protection). `ui-ux-pro-max` uses a lightweight single `--domain` search in Lite mode (not the full `--design-system`). See "Frontend Design (Conditional)" below.
 
-**After approval in Lite mode**, announce: "Design confirmed. Moving to Phase 2: Specification Confirmation (Lite)."
+**After approval in Lite mode**, announce: "Design confirmed. Handing back to orchestrator for Phase 2 (Lite)."
 
-Then execute the Phase 2 checklist, but only for items that are actually affected — mark unaffected items as N/A and skip them.
+The orchestrator then runs Phase 2 Lite (confirming only affected items, marking others N/A). Do NOT run the Phase 2 checklist yourself — that's the orchestrator's job.
 
 ## Checklist（🟡🔴 标准模式必须完成以下所有项；🟢 Lite 模式见上方精简流程，跳过此 Checklist）
 
@@ -47,7 +47,7 @@ You MUST create a task for each of these items and complete them in order (🟡�
 6. **Write design doc** — save to `docs/specs/YYYY-MM-DD-<topic>-design.md` and commit
 7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
 8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+9. **Hand back to orchestrator** — design approved; the orchestrator drives Phase 2 (Specification Confirmation) → Phase 3+4. Do NOT invoke writing-plans yourself.
 
 ## Process Flow（🟡🔴 标准模式；🟢 Lite 模式不适用此流程图）
 
@@ -63,7 +63,7 @@ digraph brainstorming {
     "Write design doc" [shape=box];
     "Spec self-review\n(fix inline)" [shape=box];
     "User reviews spec?" [shape=diamond];
-    "Invoke writing-plans skill" [shape=doublecircle];
+    "Design approved\n(hand back to orchestrator)" [shape=doublecircle];
 
     "Explore project context" -> "Visual questions ahead?";
     "Visual questions ahead?" -> "Offer Visual Companion\n(own message, no other content)" [label="yes"];
@@ -77,30 +77,12 @@ digraph brainstorming {
     "Write design doc" -> "Spec self-review\n(fix inline)";
     "Spec self-review\n(fix inline)" -> "User reviews spec?";
     "User reviews spec?" -> "Write design doc" [label="changes requested"];
-    "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
+    "User reviews spec?" -> "Design approved\n(hand back to orchestrator)" [label="approved"];
 }
 ```
 
-**The terminal state is invoking writing-plans.** However, in the 8-phase mandatory development workflow, Phase 2 (Specification Confirmation) MUST occur between brainstorming and writing-plans. Do NOT skip directly to writing-plans.
+**Brainstorming's scope ends here**: produce an approved design (with spec doc in standard mode). Do NOT invoke writing-plans or execute Phase 2/Phase 3+4 yourself — the orchestrator (dev-workflow SKILL.md) owns phase transitions. After design approval, announce "Design approved. Handing back to orchestrator for Phase 2." and let the orchestrator drive Phase 2 (Specification Confirmation) → Phase 3+4.
 
-After brainstorming completes, announce: "Design approved. Moving to Phase 2: Specification Confirmation."
-
-Then execute the Phase 2 checklist below. ALL 5 items MUST be confirmed before proceeding to Phase 3 (writing-plans). This is a hard gate — do not invoke writing-plans until every item is confirmed.
-
-### Phase 2: Specification Confirmation Checklist
-
-1. **Data Model**: What tables are added/modified? Field names, types, constraints? Any base class inheritance?
-2. **API Design**: API paths, request parameters, response format? Following existing naming conventions?
-3. **Business Rules**: State transitions, permission requirements, boundary conditions?
-4. **Spec Impact**: Does this change affect any project spec documents? If yes, must update them synchronously.
-5. **Testing Strategy**: What behaviors to test? Which are critical paths?
-
-After all 5 items are confirmed, announce: "Phase 2 complete. Moving to Phase 3+4: Prepare & Plan."
-
-**🟢🟡 Merged parallel mode** (Phase 3+4): Invoke writing-plans and using-git-worktrees in parallel.
-**🔴 Sequential mode** (Phase 3 then Phase 4): Invoke writing-plans first.
-
-The mode is determined by Phase 0's complexity assessment.
 
 ## The Process
 
@@ -169,8 +151,7 @@ Wait for the user's response. If they request changes, make them and re-run the 
 
 **Implementation:**
 
-- After Phase 2 (Grill Me) specification confirmation completes, invoke the writing-plans skill to create a detailed implementation plan
-- Do NOT invoke any other skill. writing-plans is the next step after specification confirmation.
+- Brainstorming ends at design approval. The orchestrator (dev-workflow SKILL.md) drives Phase 2 (Specification Confirmation), then Phase 3+4 (which invokes writing-plans). Do NOT invoke writing-plans or any other skill yourself — that's the orchestrator's job.
 
 ## Key Principles
 
