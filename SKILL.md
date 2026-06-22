@@ -188,6 +188,8 @@ Read `bundled-skills/brainstorming/SKILL.md` and follow its instructions. The mo
 
 This applies to Lite mode too — a 🟢 simple frontend change still goes through both skills (though the design system output can be lighter). **Trigger source**: Phase 0's Step 3 sets `is_frontend`. When `is_frontend=true`, the brainstorming sub-skill reads both frontend skills (Lite level: single `--domain` + full frontend-design read) — you don't need to manage it separately. When calling ui-ux-pro-max scripts, use the runtime detected in `.runtime-config` (see Sub-Skill Resolution section).
 
+**Persist requirement (🟡🔴 only)**: In Standard/Complex frontend projects, the ui-ux-pro-max `--design-system` call MUST include `--persist`, so the design system lands at `design-system/<project-slug>/MASTER.md` for Phase 5/6 to read. (Lite mode is N/A — it runs a single `--domain` search, which produces no MASTER.md to persist.) Persisting lets Phase 5 (execution) and Phase 6+7 (pre-delivery check) read this file instead of re-running the search — skipping `--persist` wastes the Phase 1 design-system work and forces a downstream re-query (~3300 tokens).
+
 **Hard gate**: Design must be approved by the user (via inline confirmation within the same turn) before proceeding. No code, no implementation, no scaffolding until design approval. After approval, immediately continue to Phase 2 — do not stop and wait for a new prompt.
 
 **Terminal state**: "Phase 1 complete. Design approved. Moving to Phase 2: Specification Confirmation." — This is an announcement, not a stop point. Immediately proceed to Phase 2.
