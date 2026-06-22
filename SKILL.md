@@ -286,14 +286,14 @@ This dual-track exists because MASTER.md (design) and `--stack` (implementation)
 
 Tests run once (covering both verification and merge-readiness). After code-review passes, branch management options are presented directly.
 
-1. Run test suite (once, serves both verification and merge-check)
+1. Run test suite (once, serves both verification and merge-check). **If you returned here after a Phase 5 fix** (i.e., step 3 code-review failed and you went back to fix), re-run the full suite here — the previous run tested pre-fix code, the fix changed code, so it must be re-verified.
 2. Puppeteer frontend validation if UI exists (screenshot + interaction + end-to-end). If `is_frontend=true`, also cross-check the screenshot against `design-system/<project-slug>/MASTER.md` anti-patterns section — report any violation before "all pass"
 3. Code review (correctness + reuse + efficiency)
 4. Check if spec documents need updating
-5. If tests/review fail → back to Phase 5 to fix
+5. If tests/review fail → back to Phase 5 to fix → **on return, re-run step 1 (full suite) before continuing** — do NOT carry forward the pre-fix test result. Only when step 3 review passes on the first pass (no Phase 5 round-trip) is the step-1 test result still valid.
 6. If all pass → read `bundled-skills/finishing-a-development-branch/SKILL.md` and follow its instructions for branch management
 
-The `finishing-a-development-branch` skill detects the merged mode and skips its own test verification (already done).
+The `finishing-a-development-branch` skill skips its own test verification **only when Phase 6+7 had no Phase 5 round-trip** (tests still valid). If there WAS a round-trip (code changed post-test), finishing must NOT skip — re-run is mandatory.
 
 **Terminal state**: "Phase 6+7 complete. Moving to Phase 8: Retrospective (复盘精读)." — Then immediately proceed to Phase 8.
 
