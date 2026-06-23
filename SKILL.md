@@ -340,11 +340,21 @@ Trace the complete chain for every feature implemented:
 | **Common Pitfalls** | What mistakes are typical for this type of feature |
 | **Debugging Strategy** | Where to start investigating when things go wrong |
 
-### 3. Gate — Understanding Check
+### 3. Gate — Understanding Check (Graduated by Complexity)
 
-**The user must demonstrate understanding of the main chain and key code responsibilities before moving on to the next feature.** This is not a test — it's a learning conversation. If the user can't explain it yet, walk through it again with different angles.
+**The user must concretely cover the checkpoint questions for this feature's Phase 0 complexity before moving on.** This is not a test — it's a learning conversation. Concreteness is the bar, not correctness-on-first-try: if any answer is vague ("差不多" / "就是那个"), walk through that part again with different angles. This is coverage, not a quiz.
 
-**Terminal state**: "Phase 8 complete. Feature fully understood. Ready for next request." — This is the true end of the workflow for this request.
+Gate strictness scales with complexity — the same principle that governs every other gate in this workflow (🟢 fast lane runs lighter gates; see Rollback → "Different complexity levels have different gate strictness"):
+
+| Complexity | Checkpoints (cumulative — each level is a superset of the one above) | All must be concrete |
+|------------|-------------------------------------------------------------------|---------------------|
+| 🟢 | **Q1 主链 (Main chain)**: trace the main chain this change touches — backend (Controller→Service→Mapper→SQL→Database) or frontend (Component→State→API→Response→UI) — one sentence of responsibility per layer | Q1 |
+| 🟡 | 🟢 + **Q2 关键代码 (Key code)**: which code is core logic, and *why* designed this way (not just "what it does") + **Q3 数据流 (Data flow)**: follow one piece of data end-to-end, entry → persist/render | Q1 + Q2 + Q3 |
+| 🔴 | 🟡 + **Q4 排错 (Debugging)**: if this feature breaks, which layer do you investigate first and why | Q1 + Q2 + Q3 + Q4 |
+
+**"Concrete" means**: the answer names a specific layer/file/function and states its responsibility or rationale — not a hand-wave. A vague answer on any required checkpoint → re-walk that part (keep the learning-conversation spirit). Only when every required checkpoint is concretely covered is the gate passed.
+
+**Terminal state**: "Phase 8 complete. Feature fully understood at <🟢/🟡/🔴> level. Ready for next request." — This is the true end of the workflow for this request.
 
 ---
 
