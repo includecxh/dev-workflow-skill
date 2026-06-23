@@ -257,19 +257,6 @@ git worktree prune  # Self-healing: clean up any stale registrations
 
 ## Phase 8 Handoff
 
-**This skill is part of Phase 6+7 (merged, 🟢🟡) or Phase 7 (separate, 🔴) of the 8-phase mandatory development workflow. After completing this skill, you MUST proceed to Phase 8 (复盘精读) as defined in CLAUDE.md.**
+**This skill is Phase 6+7 (merged, 🟢🟡) or Phase 7 (separate, 🔴) of the 8-phase mandatory development workflow.**
 
-Phase 8 includes:
-1. **代码精读** — 讲清 Controller → Service → Mapper → SQL → 数据库变化的完整链路
-2. **知识提炼** — 关键代码、知识点、关键词、常见错误、排错思路
-3. **门控** — 用户未讲清主链和关键代码职责前，不推进下一功能
-
-After finishing the chosen option (merge/PR/keep/discard), announce:
-
-**🟢🟡 Merged mode:**
-> "Phase 6+7 complete. Moving to Phase 8: Retrospective (复盘精读)."
-
-**🔴 Sequential mode:**
-> "Phase 7 complete. Moving to Phase 8: Retrospective (复盘精读)."
-
-Then proceed with the Phase 8 checklist.
+After the chosen branch option (merge/PR/keep/discard) is executed, announce: "Phase 6+7 (or Phase 7) complete. Handing back to orchestrator." Then stop. The orchestrator drives Phase 8 (retrospective) — do NOT describe Phase 8's content or proceed into it yourself (Sub-Skill Boundary rule).
