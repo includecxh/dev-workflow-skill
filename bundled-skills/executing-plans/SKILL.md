@@ -11,7 +11,7 @@ Load plan, review critically, execute all tasks, report when complete.
 
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
 
-**Note:** This skill is Phase 5 of the 8-phase mandatory development workflow. After all tasks are complete, proceed to Phase 6 (Verification & Review) as defined in CLAUDE.md. Do NOT skip directly to Phase 7 or Phase 8 — Phase 6 is an independent gate.
+**Note:** This skill is Phase 5 of the 8-phase mandatory development workflow. After all tasks complete, hand back to the orchestrator (announce "Phase 5 complete, handing back"); the orchestrator drives Phase 6/6+7 onward. Do NOT invoke other skills or describe other phases yourself (Sub-Skill Boundary rule).
 
 ## The Process
 
@@ -31,25 +31,9 @@ For each task:
 
 ### Step 3: Complete Development
 
-After all tasks complete and verified:
+After all tasks complete and verified, announce: "Phase 5 complete. Handing back to orchestrator." Then stop. The orchestrator drives Phase 6+7 (verify & finish) or Phase 6 (🔴) per Phase 0's mode — do NOT describe other phases or invoke other skills yourself (Sub-Skill Boundary rule).
 
-**🟢🟡 Merged Mode (Phase 6+7 combined):**
-- Announce: "Phase 5 complete. Moving to Phase 6+7: Verify & Finish."
-- Proceed to the merged Phase 6+7 as defined in CLAUDE.md
-- Tests run ONCE (covers both verification and merge-readiness check)
-- After code-review passes, branch management options are presented directly (no separate Phase 7 test run)
-
-**🔴 Sequential Mode (Phase 6 and Phase 7 separate):**
-- Announce: "Phase 5 complete. Moving to Phase 6: Verification & Review."
-- Proceed to Phase 6 (Verification & Review) as defined in CLAUDE.md
-- Run verify skill, code-review skill, and Puppeteer validation as specified in Phase 6
-- Phase 7 (finishing-a-development-branch) will run its own test verification as a separate gate
-
-**Loop-back:** If Phase 6 (or Phase 6+7) verification fails, CLAUDE.md mandates returning to Phase 5 to fix the issues. When this happens:
-1. Identify the specific failures from the verification
-2. Return to Step 2 (Execute Tasks) and address only the failing items
-3. Re-verify and announce Phase 5 complete again
-4. Re-enter Phase 6 (or 6+7) for re-verification
+**If verification fails and the orchestrator returns you here to fix:** address only the failing items (back to Step 2), re-verify, then announce Phase 5 complete again. The orchestrator re-enters Phase 6/6+7 for re-verification — you do not drive that transition.
 
 ## When to Stop and Ask for Help
 
@@ -79,8 +63,8 @@ After all tasks complete and verified:
 
 ## Integration
 
-**Required workflow skills:**
-- **using-git-worktrees** - Ensures isolated workspace (Phase 4, runs before this skill)
-- **writing-plans** - Creates the plan this skill executes (Phase 3, runs before Phase 4)
-- **Phase 6 (CLAUDE.md)** - Verification & Review (independent gate, may loop back to this skill)
-- **Phase 7 (CLAUDE.md)** - Branch completion (via finishing-a-development-branch, after Phase 6 passes)
+**Upstream skills (already ran before this one):**
+- **using-git-worktrees** — ensures the isolated workspace this skill executes in (Phase 4)
+- **writing-plans** — creates the plan this skill executes (Phase 3)
+
+Downstream phases (verify, branch completion, retrospective) are owned by the orchestrator — do not describe or invoke them from here.

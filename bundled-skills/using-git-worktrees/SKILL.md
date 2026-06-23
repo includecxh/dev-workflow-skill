@@ -214,25 +214,8 @@ Ready to implement <feature-name>
 - Auto-detect and run project setup
 - Verify clean test baseline
 
-## Phase 3+4 Handoff
+## Phase 4 Handoff
 
 **This skill is Phase 4 of the 8-phase mandatory development workflow.**
 
-### 🟢🟡 Merged Parallel Mode (Simple/Standard)
-
-When Phase 0 assessed complexity as 🟢 or 🟡, this skill runs **in parallel** with the writing-plans skill (Phase 3). Both tasks are independent.
-
-After reporting "Worktree ready", announce:
-> "Phase 4 (Worktree) complete. [Waiting for Phase 3 (Plan) / Phase 3 also complete.]"
-
-If Phase 3 (plan) is also complete, proceed to Phase 5:
-> "Phase 3+4 complete. Moving to Phase 5: Execute Development."
-
-Then invoke the executing-plans skill.
-
-### 🔴 Sequential Mode (Complex)
-
-When Phase 0 assessed complexity as 🔴, phases run sequentially. After reporting "Worktree ready", announce:
-> "Phase 4 complete. Moving to Phase 5: Execute Development."
-
-Then invoke the executing-plans skill.
+After reporting "Worktree ready", announce: "Phase 4 (Worktree) complete. Handing back to orchestrator." Then stop. The orchestrator decides what runs next (the Phase 3+4 parallel/sequential mode is based on Phase 0's complexity) — per the Sub-Skill Boundary rule, do NOT invoke other skills or describe other phases yourself.

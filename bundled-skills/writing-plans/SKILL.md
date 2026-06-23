@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: "Use in Phase 3 of the 8-phase mandatory development workflow, AFTER Phase 2 (Specification Confirmation) has been completed. Do NOT trigger before Phase 2 is done — the 5-item spec confirmation checklist must be checked off first. Converts approved specs into bite-sized implementation plans."
+description: "Use in Phase 3 of the 8-phase mandatory development workflow, after Phase 2 (Specification Confirmation) is complete. Converts approved specs into bite-sized implementation plans. The orchestrator owns phase transitions — this skill does not describe other phases or invoke other skills (Sub-Skill Boundary rule)."
 ---
 
 # Writing Plans
@@ -131,25 +131,8 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
-## Phase 3+4 Handoff
+## Phase 3 Handoff
 
 **This skill is Phase 3 of the 8-phase mandatory development workflow.**
 
-### 🟢🟡 Merged Parallel Mode (Simple/Standard)
-
-When Phase 0 assessed complexity as 🟢 or 🟡, this skill runs **in parallel** with the using-git-worktrees skill (Phase 4). Both tasks are independent — the plan doesn't need a worktree to be written, and the worktree doesn't need the plan to be created.
-
-After saving the plan, announce:
-> "Phase 3 (Plan) complete. [Waiting for Phase 4 (Worktree) / Phase 4 also complete.]"
-
-If Phase 4 (worktree) is also complete, proceed to Phase 5:
-> "Phase 3+4 complete. Moving to Phase 5: Execute Development."
-
-Then invoke the executing-plans skill.
-
-### 🔴 Sequential Mode (Complex)
-
-When Phase 0 assessed complexity as 🔴, phases run sequentially. After saving the plan, announce:
-> "Phase 3 complete. Plan saved to `docs/plans/<filename>.md`. Moving to Phase 4: Worktree Isolation."
-
-Then invoke the using-git-worktrees skill. After worktree setup completes (Phase 4), the using-git-worktrees skill will automatically hand off to Phase 5 (executing-plans).
+After saving the plan, announce: "Phase 3 (Plan) complete. Handing back to orchestrator." Then stop. The orchestrator decides what runs next (Phase 4 worktree setup, and the Phase 3+4 parallel/sequential mode based on Phase 0's complexity) — per the Sub-Skill Boundary rule, do NOT invoke other skills or describe other phases yourself.
