@@ -24,6 +24,10 @@ Read ~/.claude/skills/dev-workflow/bundled-skills/<skill-name>/SKILL.md and foll
 
 **Do NOT** use the Skill tool to invoke bundled sub-skills — they are not installed in the global skills directory.
 
+### Sub-Skill Boundary
+
+Sub-skills execute their own phase's content only. After completing, announce "Phase N complete, handing back to orchestrator" and stop — do not invoke other skills or describe other phases. The orchestrator owns all phase transitions (what runs next, in what mode, with what gates).
+
 | Skill Name | Bundled Path |
 |------------|-------------|
 | brainstorming | `bundled-skills/brainstorming/SKILL.md` |
