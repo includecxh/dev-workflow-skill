@@ -55,7 +55,7 @@ Same as the 🟢🟡 merged mode described in `merged-phases.md`:
 1. Run tests (once)
 2. Code review (correctness + no side effects)
 3. Spec sync check
-4. Gate: fail → back to Phase 5
+4. Gate: fail → back to Phase 5 (round-trips with no progression on ≥2 consecutive times trips the Phase 5 execution budget — stop and ask the user; see main SKILL.md Phase 5 Core rules)
 5. Pass → branch management via `finishing-a-development-branch` skill
 
 ---

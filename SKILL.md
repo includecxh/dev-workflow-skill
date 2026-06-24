@@ -266,6 +266,7 @@ Read `bundled-skills/executing-plans/SKILL.md` and follow its instructions. It l
 - Commit with standard prefixes (feat/fix/refactor) describing business motivation and scope
 - Stop and ask for help when blocked — don't guess
 - Never develop on main/master without explicit user consent
+- **Execution budget (circuit breaker)**: the fail→back-to-Phase-5 path has no built-in termination. If round-trips to Phase 5 recur on ≥2 consecutive times **with no progression**, stop and ask the user rather than re-looping indefinitely. **Progression = TodoWrite completed-task count grew, OR git commit count grew** (OR-logic — either is enough; "no progression" = neither grew since the last return). Why progression (not "same failure"): judging failure sameness is a semantic guess and lets flaky noise accumulate; progression is observable from tool state (TaskList) + `git log --oneline`, both cheap. Backward motion (completed count drops, e.g. a task reopened) counts as no progression. When the budget trips, present the ABCD circuit-breaker prompt (see executing-plans). **Known limitation**: no total trip cap — a triage→fix→stuck→triage loop is accepted as the cost of keeping the mechanism light.
 
 **Frontend skills for bug path**: If Phase 0 set `is_frontend=true` (the bug path skips Phase 1, so this flag is the only trigger), read `bundled-skills/frontend-design/SKILL.md` + `bundled-skills/ui-ux-pro-max/SKILL.md` at entry before fixing — at **Lite level** (full frontend-design read + single `--domain` search, not full `--design-system`), matching the Lite exception in brainstorming.
 
@@ -294,7 +295,7 @@ Tests run once (covering both verification and merge-readiness). After code-revi
 2. Puppeteer frontend validation if UI exists (screenshot + interaction + end-to-end). If `is_frontend=true`, also cross-check the screenshot against `design-system/<project-slug>/MASTER.md` anti-patterns section — report any violation before "all pass"
 3. Code review (correctness + reuse + efficiency)
 4. Check if spec documents need updating
-5. If tests/review fail → back to Phase 5 to fix → **on return, re-run step 1 (full suite) before continuing** — do NOT carry forward the pre-fix test result. Only when step 3 review passes on the first pass (no Phase 5 round-trip) is the step-1 test result still valid.
+5. If tests/review fail → back to Phase 5 to fix → **on return, re-run step 1 (full suite) before continuing** — do NOT carry forward the pre-fix test result. Only when step 3 review passes on the first pass (no Phase 5 round-trip) is the step-1 test result still valid. **If round-trips recur on ≥2 consecutive times with no progression (completed-task count AND commit count both flat — see Phase 5 Core rules), the Phase 5 execution budget trips — stop and ask the user** (ABCD prompt, executing-plans); don't re-loop indefinitely.
 6. If all pass → read `bundled-skills/finishing-a-development-branch/SKILL.md` and follow its instructions for branch management
 
 The `finishing-a-development-branch` skill skips its own test verification **only when Phase 6+7 had no Phase 5 round-trip** (tests still valid). If there WAS a round-trip (code changed post-test), finishing must NOT skip — re-run is mandatory.
@@ -307,7 +308,7 @@ The `finishing-a-development-branch` skill skips its own test verification **onl
 1. Puppeteer frontend validation if UI exists. If `is_frontend=true`, also cross-check the screenshot against `design-system/<project-slug>/MASTER.md` anti-patterns section — report any violation before proceeding
 2. Run verify skill + code-review skill
 3. Check spec document updates
-4. Gate: review not passed → back to Phase 5
+4. Gate: review not passed → back to Phase 5 (round-trips with no progression on ≥2 consecutive times trips the Phase 5 execution budget — stop and ask the user; don't re-loop indefinitely)
 
 **Terminal state**: "Phase 6 complete. Moving to Phase 7: Branch Completion." — Then immediately proceed to Phase 7.
 
@@ -393,6 +394,7 @@ When the workflow path changes mid-stream, you MUST roll back file changes made 
 - Need tech-stack decisions assumed to be inherited → upgrade to at least 🟡
 - Feature scope turns out much larger than estimated → re-assess complexity
 - User says "this is more complex than I thought" → pause immediately
+- Phase 5 execution budget trips (≥2 consecutive round-trips with no progression) **and the user judges it a complexity misjudgment** → upgrade / re-classify (the budget itself just stops the loop; this signal routes a judged misjudgment into the Rollback path above)
 
 **When misjudgment is confirmed:**
 
@@ -404,6 +406,19 @@ When the workflow path changes mid-stream, you MUST roll back file changes made 
 6. The new flow starts from Phase 1 — no shortcuts, no carrying over code from the abandoned path
 
 > **Why rollback is mandatory**: Different complexity levels have different gate strictness. 🟢 fast lane skips many safeguards (simplified design, parallel planning). If the real complexity is 🟡, code produced under relaxed gates may lack proper spec confirmation and test coverage. Continuing without rollback = bypassing gates.
+
+**Circuit-breaker outcomes that trigger rollback** (when Phase 5 execution budget trips and triage yields these results):
+
+| Outcome | Rollback scope | Next |
+|---------|----------------|------|
+| b. Direction changed (same complexity) | **Full rollback** of Phase 5 work — do NOT attempt partial rollback to salvage reusable code. Judging which pieces conflict costs semantic tokens that exceed the savings; full rollback is the token-cheaper choice. | Re-enter Phase 5 fresh on the new direction |
+| c. Complexity misjudged (user-judged) | Full rollback (existing rule: all code under wrong assessment) | Phase 0 → re-classify |
+| a. Root cause found | No rollback — clear the trip count, resume Phase 5 with the fix | Phase 5 |
+| d. Flaky / environment | No rollback — clear the trip count, fix environment/re-run | Phase 5 or 6+7 |
+
+**Describe before executing**: rollback is hard to reverse. Before running any rollback command, describe to the user exactly what will be rolled back (file count, commit count, worktree path) and get confirmation. For full rollback this is a one-line summary ("Will roll back all Phase 5 work: N files, M commits"); no per-file conflict listing needed.
+
+**Learn from full rollback (b only)**: when outcome b's full rollback discards work, capture **only direction-independent pitfalls** (environment setup, third-party-library gotchas) as a one-liner to memory — NOT plan-A-specific design choices, which become noise once plan A is abandoned. This protects the re-walk window before Phase 8 retrospective.
 
 **How to roll back:**
 
