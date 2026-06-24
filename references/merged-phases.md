@@ -61,7 +61,7 @@ The merged mode runs tests **once** — that single run covers both verification
    - Did this change affect any spec documents?
    - If yes → update them now
 5. Gate check
-   ❌ Tests/review fail → back to Phase 5 to fix
+   ❌ Tests/review fail → back to Phase 5 to fix (round-trips with no progression on ≥2 consecutive times trips the Phase 5 execution budget — stop and ask the user; see main SKILL.md Phase 5 Core rules)
    ✅ All pass → proceed to branch management
 6. Invoke finishing-a-development-branch skill
    - The skill detects merged mode
@@ -89,13 +89,13 @@ Complex projects do NOT merge these phases:
 
 **Phase 6 — Verification & Review** (independent gate):
 - Run verification + code review
-- Gate: fail → back to Phase 5
+- Gate: fail → back to Phase 5 (round-trips with no progression on ≥2 consecutive times trips the Phase 5 execution budget — stop and ask the user)
 - Terminal: "Phase 6 complete. Moving to Phase 7: Branch Completion."
 
 **Phase 7 — Branch Completion**:
 - Invoke finishing-a-development-branch skill
 - The skill runs its OWN test verification as a separate gate
-- If tests fail → back to Phase 5 (fix → re-verify through Phase 6 → re-enter Phase 7)
+- If tests fail → back to Phase 5 (fix → re-verify through Phase 6 → re-enter Phase 7; round-trips with no progression on ≥2 consecutive times trips the Phase 5 execution budget — stop and ask the user)
 - Terminal: "Phase 7 complete. Moving to Phase 8: Retrospective."
 
 ### Why 🔴 Doesn't Merge

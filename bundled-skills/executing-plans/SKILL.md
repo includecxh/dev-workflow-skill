@@ -41,7 +41,30 @@ After all tasks complete and verified, announce: "Phase 5 complete. Handing back
 - Hit a blocker (missing dependency, test fails, instruction unclear)
 - Plan has critical gaps preventing starting
 - You don't understand an instruction
-- Verification fails repeatedly
+- Verification fails repeatedly — **this trips the Phase 5 execution budget** (see main SKILL.md Phase 5 Core rules). The fail→back-to-Phase-5 path has no built-in termination, so when round-trips recur on ≥2 consecutive times with no progression, stop and ask the user rather than re-looping indefinitely.
+
+  **Progression check** (runs each time you re-enter Phase 5 after a fail→back): read current state with two cheap, objective signals — TodoWrite `TaskList` (count `completed` tasks) and `git log --oneline` (count commits since Phase 5 started). Progression = EITHER grew since the last re-entry (OR-logic). No progression = BOTH flat. Backward motion (completed count drops — a task reopened) counts as no progression. Do NOT compare failure contents — "same failure" is a semantic guess; progression is observable from tool state. No history is stored: both signals are re-read fresh each re-entry, so no hallucination on remembered values.
+
+  **When the budget trips, present the ABCD circuit-breaker prompt** — show business context, not skill internals (no "completed=X" or "round-trip" jargon):
+
+  ```
+  [段1 业务现状] We were working on <feature>. The last change was <business action>, but <symptom> is still unresolved.
+  [段2 Claude's top guess] Most likely cause: <one-line cause>.
+  [段3 Choose a direction]
+    A. If <cause-A> → investigate <direction-A>
+    B. If <cause-B> → investigate <direction-B>
+    C. Neither fits → likely complexity misjudgment, roll back to Phase 0
+    D. Don't commit to a direction yet — keep exploring possible causes with me
+  ```
+  (2 investigation options A/B + 1 escalation C + 1 explore-more D = max 4; Claude guides the exploration, doesn't offload judgment to the user.)
+
+  **Outcome of triage** (see Rollback section in main SKILL.md for the rollback rows):
+  - a. Root cause found → clear the trip count, resume Phase 5 with the fix
+  - b. Direction changed → full rollback (token-cheaper than partial), then re-enter Phase 5 fresh
+  - c. Complexity misjudged → full rollback, back to Phase 0
+  - d. Flaky / environment → clear the trip count, fix environment / re-run
+
+  **D semantics**: exploring is a means, not an end — after exploration you still land on A/B/C. The trip state stays active during D (not cleared); it only clears when an a/d outcome unblocks. Triage-without-result (e) is out of scope for this version.
 
 **Ask for clarification rather than guessing.**
 
