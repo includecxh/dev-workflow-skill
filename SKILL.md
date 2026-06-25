@@ -265,16 +265,20 @@ Read `bundled-skills/executing-plans/SKILL.md` and follow its instructions. It l
 - Commit with standard prefixes (feat/fix/refactor) describing business motivation and scope
 - Stop and ask for help when blocked — don't guess
 - Never develop on main/master without explicit user consent
-- **Execution budget (circuit breaker)**: the fail→back-to-Phase-5 path has no built-in termination. If round-trips to Phase 5 recur on ≥2 consecutive times **with no progression**, stop and ask the user rather than re-looping indefinitely. **Progression = TodoWrite completed-task count grew, OR git commit count grew** (OR-logic — either is enough; "no progression" = neither grew since the last return). Why progression (not "same failure"): judging failure sameness is a semantic guess and lets flaky noise accumulate; progression is observable from tool state (TaskList) + `git log --oneline`, both cheap. Backward motion (completed count drops, e.g. a task reopened) counts as no progression. When the budget trips, present the ABCD circuit-breaker prompt (see executing-plans). **Known limitation**: no total trip cap — a triage→fix→stuck→triage loop is accepted as the cost of keeping the mechanism light.
+- **Execution budget (circuit breaker)**: the fail→back-to-Phase-5 path has no built-in termination. If round-trips to Phase 5 recur on ≥2 consecutive times **with no progression**, stop and ask the user rather than re-looping indefinitely.
+  - Progression = TodoWrite completed-task count grew, OR git commit count grew.
+  - No progression = neither grew since the last return. Use progression, not failure-sameness — it accumulates flaky noise. Backward motion (completed count drops, e.g. a task reopened) counts as no progression.
+  - When the budget trips, present the ABCD circuit-breaker prompt (see executing-plans).
+  - **Known limitation**: no total trip cap.
 
-**Frontend skills for bug path**: If Phase 0 set `is_frontend=true` (the bug path skips Phase 1, so this flag is the only trigger), read `bundled-skills/frontend-design/SKILL.md` + `bundled-skills/ui-ux-pro-max/SKILL.md` at entry before fixing — at **Lite level** (full frontend-design read + single `--domain` search, not full `--design-system`), matching the Lite exception in brainstorming.
+**Frontend skills for bug path**: If Phase 0 set `is_frontend=true` (the bug path skips Phase 1, so this flag is the only trigger), read `bundled-skills/frontend-design/SKILL.md` + `bundled-skills/ui-ux-pro-max/SKILL.md` at entry before fixing — at **Lite level** (full frontend-design read + single `--domain` search, not full `--design-system`).
 
-**Frontend skills for standard path** (🟡🔴, not bug, not Lite): When `is_frontend=true` and entering Phase 5 via the standard path (i.e., Phase 1 already ran `--design-system --persist` per PR #9), consume the persisted design system instead of re-generating:
-1. **Read** `design-system/<project-slug>/MASTER.md` — design principles, colors, typography, anti-patterns (the file exists per the Phase 1 `--persist` mandate)
-2. **Run ONE** `--stack <stack>` search at entry (default `html-tailwind` if the project stack is unspecified; adjust to react/nextjs/vue/etc. per the actual project) — implementation guidance for the chosen stack; keep the result in conversation for subsequent steps to reference
+**Frontend skills for standard path** (🟡🔴, not bug, not Lite): When `is_frontend=true` and entering Phase 5 via the standard path (Phase 1 already ran `--design-system --persist`), consume the persisted design system instead of re-generating:
+1. **Read** `design-system/<project-slug>/MASTER.md` — design principles, colors, typography, anti-patterns
+2. **Run ONE** `--stack <stack>` search at entry (default `html-tailwind` if unspecified; adjust per actual project stack) — implementation guidance for the chosen stack; keep the result in conversation for subsequent steps to reference
 3. Subsequent TDD steps reference both; do **NOT** re-run `--design-system` or `--stack` per step (avoids token accumulation)
 
-This dual-track exists because MASTER.md (design) and `--stack` (implementation) are orthogonal — reading only MASTER would drop stack-specific guidance (misaligning rule 12).
+Don't read MASTER alone — `--stack` is orthogonal; skipping it drops stack-specific guidance.
 
 **Terminal state** (depends on mode) — Announce then immediately proceed:
 
