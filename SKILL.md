@@ -89,7 +89,6 @@ Development without structure leads to: skipped designs, untested code, unclear 
 
 **Exceptions where pausing IS appropriate:**
 - Phase 1 design approval gate — the user must explicitly approve the design before coding begins
-- Phase 8 understanding check — the user must demonstrate understanding before the workflow ends
 - User explicitly asks to pause or take a break
 - An unexpected error or blocker is encountered that requires user guidance
 
@@ -341,21 +340,14 @@ Trace the complete chain for every feature implemented:
 | **Common Pitfalls** | What mistakes are typical for this type of feature |
 | **Debugging Strategy** | Where to start investigating when things go wrong |
 
-### 3. Gate — Understanding Check (Graduated by Complexity)
+### 3. Produce and Complete (No Gate)
 
-**The user must concretely cover the checkpoint questions for this feature's Phase 0 complexity before moving on.** This is not a test — it's a learning conversation. Concreteness is the bar, not correctness-on-first-try: if any answer is vague ("差不多" / "就是那个"), walk through that part again with different angles. This is coverage, not a quiz.
+Produce 段1 + 段2, then announce completion and move to the next request.
 
-Gate strictness scales with complexity — the same principle that governs every other gate in this workflow (🟢 fast lane runs lighter gates; see Rollback → "Different complexity levels have different gate strictness"):
+- **Do**: output walkthrough + knowledge extraction, then declare done.
+- **Don't**: ask checkpoint questions, require the user to prove understanding, or pause for an understanding check. Understanding is the user's self-assessment — the walkthrough + knowledge extraction surface the material, reviewing it is their call.
 
-| Complexity | Checkpoints (cumulative — each level is a superset of the one above) | All must be concrete |
-|------------|-------------------------------------------------------------------|---------------------|
-| 🟢 | **Q1 主链 (Main chain)**: trace the main chain this change touches — backend (Controller→Service→Mapper→SQL→Database) or frontend (Component→State→API→Response→UI) — one sentence of responsibility per layer | Q1 |
-| 🟡 | 🟢 + **Q2 关键代码 (Key code)**: which code is core logic, and *why* designed this way (not just "what it does") + **Q3 数据流 (Data flow)**: follow one piece of data end-to-end, entry → persist/render | Q1 + Q2 + Q3 |
-| 🔴 | 🟡 + **Q4 排错 (Debugging)**: if this feature breaks, which layer do you investigate first and why | Q1 + Q2 + Q3 + Q4 |
-
-**"Concrete" means**: the answer names a specific layer/file/function and states its responsibility or rationale — not a hand-wave. A vague answer on any required checkpoint → re-walk that part (keep the learning-conversation spirit). Only when every required checkpoint is concretely covered is the gate passed.
-
-**Terminal state**: "Phase 8 complete. Feature fully understood at <🟢/🟡/🔴> level. Ready for next request." — This is the true end of the workflow for this request.
+**Terminal state**: "Phase 8 complete. Ready for next request."
 
 ---
 
@@ -445,7 +437,7 @@ When the workflow path changes mid-stream, you MUST roll back file changes made 
 
 ## Terminal State Chain Reference
 
-Every phase ends with a standard declaration. These declarations are **log announcements, not stop points** — after announcing, immediately proceed to the next phase within the same turn. The only gates that pause for user input are: Phase 0 classification confirmation, Phase 1 design approval, and Phase 8 understanding check.
+Every phase ends with a standard declaration. These declarations are **log announcements, not stop points** — after announcing, immediately proceed to the next phase within the same turn. The only gates that pause for user input are: Phase 0 classification confirmation and Phase 1 design approval.
 
 | Flow | Phase 0 → | Phase 1 → | Phase 2 → | Phase 3+4/3 → | Phase 4 → | Phase 5 → | Phase 6+7/6 → | Phase 7 → |
 |------|-----------|-----------|-----------|----------------|-----------|-----------|----------------|-----------|
