@@ -92,8 +92,6 @@ Development without structure leads to: skipped designs, untested code, unclear 
 - User explicitly asks to pause or take a break
 - An unexpected error or blocker is encountered that requires user guidance
 
-> Phase 8 no longer pauses for an understanding check (removed in PR #17, reversing the gate added in PR #15). It completes without user interaction.
-
 ## The Big Picture
 
 ```
@@ -341,13 +339,14 @@ Trace the complete chain for every feature implemented:
 | **Common Pitfalls** | What mistakes are typical for this type of feature |
 | **Debugging Strategy** | Where to start investigating when things go wrong |
 
-### 3. No Interaction Gate — Produce and Complete
+### 3. Produce and Complete (No Gate)
 
-Phase 8 is **Claude's single-sided output**: after producing 段1 (Code Walkthrough) and 段2 (Knowledge Extraction), Claude announces completion directly and moves to the next request. There is **no understanding-check gate, no checkpoint questions, no pause for the user to prove understanding**.
+Produce 段1 + 段2, then announce completion and move to the next request.
 
-**Why no gate**: judging whether the user "truly understood" is Claude's subjective call — and the user self-assesses better than Claude does. The gate's only non-subjective value was "prevent skipping"; that protection is traded for zero-friction flow (an intentional decision — see PR #17, which reverses the gate added in PR #15). Understanding is now the user's own responsibility: 段1 + 段2 surface the main chain and key code so the user *can* review them, but whether they do is up to them.
+- **Do**: output walkthrough + knowledge extraction, then declare done.
+- **Don't**: ask checkpoint questions, require the user to prove understanding, or pause for an understanding check. Understanding is the user's self-assessment — the walkthrough + knowledge extraction surface the material, reviewing it is their call.
 
-**Terminal state**: "Phase 8 complete. Ready for next request." — This is the true end of the workflow for this request. No `<🟢/🟡/🔴> level` suffix (there is no gate to grade).
+**Terminal state**: "Phase 8 complete. Ready for next request."
 
 ---
 
@@ -423,7 +422,7 @@ When the workflow path changes mid-stream, you MUST roll back file changes made 
 
 ## Terminal State Chain Reference
 
-Every phase ends with a standard declaration. These declarations are **log announcements, not stop points** — after announcing, immediately proceed to the next phase within the same turn. The only gates that pause for user input are: Phase 0 classification confirmation and Phase 1 design approval. (Phase 8 previously paused for an understanding check; that gate was removed in PR #17 — Phase 8 now completes without pausing.)
+Every phase ends with a standard declaration. These declarations are **log announcements, not stop points** — after announcing, immediately proceed to the next phase within the same turn. The only gates that pause for user input are: Phase 0 classification confirmation and Phase 1 design approval.
 
 | Flow | Phase 0 → | Phase 1 → | Phase 2 → | Phase 3+4/3 → | Phase 4 → | Phase 5 → | Phase 6+7/6 → | Phase 7 → |
 |------|-----------|-----------|-----------|----------------|-----------|-----------|----------------|-----------|
