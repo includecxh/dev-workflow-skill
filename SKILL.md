@@ -390,7 +390,7 @@ When the workflow path changes mid-stream, you MUST roll back file changes made 
 - Need tech-stack decisions assumed to be inherited → upgrade to at least 🟡
 - Feature scope turns out much larger than estimated → re-assess complexity
 - User says "this is more complex than I thought" → pause immediately
-- Phase 5 execution budget trips (≥2 consecutive round-trips with no progression) **and the user judges it a complexity misjudgment** → upgrade / re-classify (the budget itself just stops the loop; this signal routes a judged misjudgment into the Rollback path above)
+- Phase 5 execution budget trips (≥2 round-trips, no progression) **AND the user judges it a complexity misjudgment** → upgrade / re-classify
 
 **When misjudgment is confirmed:**
 
@@ -401,20 +401,18 @@ When the workflow path changes mid-stream, you MUST roll back file changes made 
 5. Return to **Phase 0** to re-classify and re-assess
 6. The new flow starts from Phase 1 — no shortcuts, no carrying over code from the abandoned path
 
-> **Why rollback is mandatory**: Different complexity levels have different gate strictness. 🟢 fast lane skips many safeguards (simplified design, parallel planning). If the real complexity is 🟡, code produced under relaxed gates may lack proper spec confirmation and test coverage. Continuing without rollback = bypassing gates.
-
 **Circuit-breaker outcomes that trigger rollback** (when Phase 5 execution budget trips and triage yields these results):
 
 | Outcome | Rollback scope | Next |
 |---------|----------------|------|
-| b. Direction changed (same complexity) | **Full rollback** of Phase 5 work — do NOT attempt partial rollback to salvage reusable code. Judging which pieces conflict costs semantic tokens that exceed the savings; full rollback is the token-cheaper choice. | Re-enter Phase 5 fresh on the new direction |
-| c. Complexity misjudged (user-judged) | Full rollback (existing rule: all code under wrong assessment) | Phase 0 → re-classify |
+| b. Direction changed (same complexity) | **Full rollback** — don't attempt partial to salvage (judging conflicts costs more tokens than re-doing). | Re-enter Phase 5 fresh on the new direction |
+| c. Complexity misjudged (user-judged) | Full rollback of all code under wrong assessment | Phase 0 → re-classify |
 | a. Root cause found | No rollback — clear the trip count, resume Phase 5 with the fix | Phase 5 |
 | d. Flaky / environment | No rollback — clear the trip count, fix environment/re-run | Phase 5 or 6+7 |
 
-**Describe before executing**: rollback is hard to reverse. Before running any rollback command, describe to the user exactly what will be rolled back (file count, commit count, worktree path) and get confirmation. For full rollback this is a one-line summary ("Will roll back all Phase 5 work: N files, M commits"); no per-file conflict listing needed.
+**Describe before executing**: rollback is hard to reverse. Before running any rollback command, describe what will be rolled back (file count, commit count, worktree path) and get confirmation. For full rollback: one-line summary ("N files, M commits"), no per-file listing.
 
-**Learn from full rollback (b only)**: when outcome b's full rollback discards work, capture **only direction-independent pitfalls** (environment setup, third-party-library gotchas) as a one-liner to memory — NOT plan-A-specific design choices, which become noise once plan A is abandoned. This protects the re-walk window before Phase 8 retrospective.
+**Learn from full rollback (b only)**: capture only direction-independent pitfalls (env/library) as a one-liner to memory. Don't capture plan-A-specific design choices (noise once plan A is abandoned).
 
 **How to roll back:**
 
