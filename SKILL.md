@@ -401,6 +401,8 @@ When the workflow path changes mid-stream, you MUST roll back file changes made 
 5. Return to **Phase 0** to re-classify and re-assess
 6. The new flow starts from Phase 1 — no shortcuts, no carrying over code from the abandoned path
 
+> Don't skip rollback — continuing with code produced under relaxed gates = bypassing the gates the new complexity requires.
+
 **Circuit-breaker outcomes that trigger rollback** (when Phase 5 execution budget trips and triage yields these results):
 
 | Outcome | Rollback scope | Next |
