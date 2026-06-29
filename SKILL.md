@@ -325,7 +325,7 @@ For full merged-phase details, read `references/merged-phases.md`.
 
 ## Phase 8: Retrospective (复盘精读)
 
-**This phase is executed directly by this skill** — it's the learning-oriented conclusion.
+**This phase runs directly in the orchestrator (no sub-skill).**
 
 ### 1. Code Walkthrough (代码精读)
 
@@ -349,7 +349,7 @@ Trace the complete chain for every feature implemented:
 Produce 段1 + 段2, then announce completion and move to the next request.
 
 - **Do**: output walkthrough + knowledge extraction, then declare done.
-- **Don't**: ask checkpoint questions, require the user to prove understanding, or pause for an understanding check. Understanding is the user's self-assessment — the walkthrough + knowledge extraction surface the material, reviewing it is their call.
+- **Don't**: ask checkpoint questions, require the user to prove understanding, or pause for an understanding check.
 
 **Terminal state**: "Phase 8 complete. Ready for next request."
 
