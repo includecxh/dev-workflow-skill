@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: Use when you have a written implementation plan to execute in a separate session with review checkpoints
+description: Use when you have a written implementation plan to execute
 ---
 
 # Executing Plans
@@ -41,11 +41,14 @@ After all tasks complete and verified, announce: "Phase 5 complete. Handing back
 - Hit a blocker (missing dependency, test fails, instruction unclear)
 - Plan has critical gaps preventing starting
 - You don't understand an instruction
-- Verification fails repeatedly — **this trips the Phase 5 execution budget** (see main SKILL.md Phase 5 Core rules). The fail→back-to-Phase-5 path has no built-in termination, so when round-trips recur on ≥2 consecutive times with no progression, stop and ask the user rather than re-looping indefinitely.
+- Verification fails repeatedly → trips the Phase 5 execution budget (≥2 round-trips with no progression → stop and ask the user; see main SKILL.md Phase 5 Core rules).
 
-  **Progression check** (runs each time you re-enter Phase 5 after a fail→back): read current state with two cheap, objective signals — TodoWrite `TaskList` (count `completed` tasks) and `git log --oneline` (count commits since Phase 5 started). Progression = EITHER grew since the last re-entry (OR-logic). No progression = BOTH flat. Backward motion (completed count drops — a task reopened) counts as no progression. Do NOT compare failure contents — "same failure" is a semantic guess; progression is observable from tool state. No history is stored: both signals are re-read fresh each re-entry, so no hallucination on remembered values.
+  **Progression check** (runs each time you re-enter Phase 5 after a fail→back): read current state with two signals — TodoWrite `TaskList` (count `completed` tasks) and `git log --oneline` (count commits since Phase 5 started).
+  - Progression = EITHER grew since the last re-entry.
+  - No progression = BOTH flat. Backward motion (completed count drops — a task reopened) counts as no progression.
+  - Don't compare failure contents (semantic guess). Use progression only. Re-read both signals fresh each re-entry — no history stored, no hallucination on remembered values.
 
-  **When the budget trips, present the ABCD circuit-breaker prompt** — show business context, not skill internals (no "completed=X" or "round-trip" jargon):
+  **When the budget trips, present the ABCD circuit-breaker prompt** — show business context, not skill internals:
 
   ```
   [段1 业务现状] We were working on <feature>. The last change was <business action>, but <symptom> is still unresolved.
@@ -56,7 +59,6 @@ After all tasks complete and verified, announce: "Phase 5 complete. Handing back
     C. Neither fits → likely complexity misjudgment, roll back to Phase 0
     D. Don't commit to a direction yet — keep exploring possible causes with me
   ```
-  (2 investigation options A/B + 1 escalation C + 1 explore-more D = max 4; Claude guides the exploration, doesn't offload judgment to the user.)
 
   **Outcome of triage** (see Rollback section in main SKILL.md for the rollback rows):
   - a. Root cause found → clear the trip count, resume Phase 5 with the fix
@@ -64,7 +66,7 @@ After all tasks complete and verified, announce: "Phase 5 complete. Handing back
   - c. Complexity misjudged → full rollback, back to Phase 0
   - d. Flaky / environment → clear the trip count, fix environment / re-run
 
-  **D semantics**: exploring is a means, not an end — after exploration you still land on A/B/C. The trip state stays active during D (not cleared); it only clears when an a/d outcome unblocks. Triage-without-result (e) is out of scope for this version.
+  **D**: exploring is a means, not an end — land on A/B/C after. Trip state stays active during D (not cleared); it clears when an a/d outcome unblocks.
 
 **Ask for clarification rather than guessing.**
 
