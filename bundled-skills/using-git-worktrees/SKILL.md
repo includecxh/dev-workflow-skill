@@ -78,7 +78,7 @@ Follow this priority order. Explicit user preference always beats observed files
    project=$(basename "$(git rev-parse --show-toplevel)")
    ls -d ~/.config/dev-workflow/worktrees/$project 2>/dev/null
    ```
-   If found, use it (backward compatibility with legacy global path).
+   If found, use it.
 
 4. **If there is no other guidance available**, default to `.worktrees/` at the project root.
 
@@ -218,4 +218,4 @@ Ready to implement <feature-name>
 
 **This skill is Phase 4 of the 8-phase mandatory development workflow.**
 
-After reporting "Worktree ready", announce: "Phase 4 (Worktree) complete. Handing back to orchestrator." Then stop. The orchestrator decides what runs next (the Phase 3+4 parallel/sequential mode is based on Phase 0's complexity) — per the Sub-Skill Boundary rule, do NOT invoke other skills or describe other phases yourself.
+After reporting "Worktree ready", announce: "Phase 4 (Worktree) complete. Handing back to orchestrator." Then stop — don't invoke other skills or describe other phases.
