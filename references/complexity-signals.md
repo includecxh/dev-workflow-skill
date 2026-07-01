@@ -44,8 +44,7 @@ This document provides the full signal reference for Phase 0 Step 2 (Complexity 
 - Feature requires new infrastructure (message queue, scheduler) → 🔴
 
 **3. User explicitly says "this is complex"**
-- Trust the user's judgment → 🔴
-- Even if it doesn't look complex to you, the user may know about hidden dependencies
+- Trust the user's judgment → 🔴. The user may know hidden dependencies you don't.
 
 **4. New project**
 - Starting from scratch is always 🔴
@@ -93,4 +92,4 @@ When evaluating complexity, ask yourself:
 6. Are there security or compliance considerations?
 7. Is the scope clearly bounded?
 
-If unsure between two levels, **round up**. It's better to have slightly more structure than to discover mid-project that you needed it.
+If unsure between two levels, **round up** — under-structuring is discovered mid-project, over-structuring isn't.

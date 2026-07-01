@@ -8,7 +8,7 @@ Lite mode is only available when Phase 0 assessed complexity as 🟢 (Simple). I
 
 ## Phase 1 Lite — Quick Design Confirmation
 
-Instead of the full brainstorming process (explore → ask → propose approaches → present design → write spec → review), Lite mode condenses this into 3 steps:
+Lite mode condenses brainstorming into 3 steps:
 
 ### Step 1: Quick Confirmation (2-3 questions)
 

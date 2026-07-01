@@ -70,7 +70,7 @@ When Phase 0 assesses 🟢 or 🟡:
 - Phase 3+4 MUST run in parallel (not sequentially "for safety")
 - Phase 6+7 MUST run as a combined pass (not split into separate gates)
 
-The merging is a deliberate optimization, not a shortcut. Running them sequentially when they could be parallel wastes time without adding safety.
+Don't split merged phases "for safety" — wastes time without adding safety.
 
 ## Rule 15: Complex Projects Must Use All 8 Phases
 
@@ -79,7 +79,7 @@ When Phase 0 assesses 🔴:
 - No phases can be merged (3+4 stay separate, 6+7 stay separate)
 - No gates can be skipped
 
-Complex projects need independent gates because the risk of cross-contamination between phases is real. The extra time is the cost of managing complexity.
+Don't skip or merge phases for 🔴 — cross-contamination risk between phases is real.
 
 ## Rule 16: (merged into Rule 11)
 
@@ -96,13 +96,9 @@ If Phase 5 (or later) reveals that Phase 0's complexity assessment was wrong, th
 5. **Return to Phase 0** for re-classification and re-assessment
 6. **Start fresh** — no carrying over code from the abandoned path
 
-**Why rollback is mandatory**: Different complexity levels have different gate strictness. Code produced under relaxed gates (🟢 fast lane) may lack proper spec confirmation and test coverage needed for 🟡 or 🔴. Continuing without rollback = bypassing gates retroactively.
+Don't skip rollback — continuing bypasses the gates the new complexity requires (full rationale in SKILL.md Rollback section).
 
-**Common misjudgment signals in Phase 5**:
-- Need new database tables not considered in Phase 0 → upgrade to at least 🟡
-- Need cross-module coordination assumed to be single-component → upgrade to at least 🟡
-- Need tech-stack decisions assumed to be inherited → upgrade to at least 🟡
-- Feature scope much larger than estimated → re-assess
+Post-hoc misjudgment signals (discovered in Phase 5) live in SKILL.md Rollback section — this file covers pre-work (Phase 0 upfront) signals only.
 
 ---
 
