@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: "Use in Phase 3 of the 8-phase mandatory development workflow, after Phase 2 (Specification Confirmation) is complete. Converts approved specs into bite-sized implementation plans. The orchestrator owns phase transitions — this skill does not describe other phases or invoke other skills (Sub-Skill Boundary rule)."
+description: "Use in Phase 3 (after Phase 2 spec confirmation) to convert approved specs into bite-sized implementation plans."
 ---
 
 # Writing Plans
@@ -121,7 +121,7 @@ Every step must contain the actual content an engineer needs. These are **plan f
 
 ## Self-Review
 
-After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
+After writing the complete plan, review it against the spec with fresh eyes.
 
 **1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
 
