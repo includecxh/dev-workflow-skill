@@ -11,7 +11,7 @@ Load plan, review critically, execute all tasks, report when complete.
 
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
 
-**Note:** This skill is Phase 5 of the 8-phase mandatory development workflow. After all tasks complete, hand back to the orchestrator (announce "Phase 5 complete, handing back"); the orchestrator drives Phase 6/6+7 onward. Do NOT invoke other skills or describe other phases yourself (Sub-Skill Boundary rule).
+**Note:** Phase 5 of the 8-phase workflow. After all tasks complete, announce "Phase 5 complete, handing back" and stop — don't invoke other skills or describe other phases.
 
 ## The Process
 
@@ -31,9 +31,9 @@ For each task:
 
 ### Step 3: Complete Development
 
-After all tasks complete and verified, announce: "Phase 5 complete. Handing back to orchestrator." Then stop. The orchestrator drives Phase 6+7 (verify & finish) or Phase 6 (🔴) per Phase 0's mode — do NOT describe other phases or invoke other skills yourself (Sub-Skill Boundary rule).
+After all tasks complete and verified, announce: "Phase 5 complete. Handing back to orchestrator." Then stop. The orchestrator drives Phase 6+7 (verify & finish) or Phase 6 (🔴) per Phase 0's mode — don't describe other phases or invoke other skills.
 
-**If verification fails and the orchestrator returns you here to fix:** address only the failing items (back to Step 2), re-verify, then announce Phase 5 complete again. The orchestrator re-enters Phase 6/6+7 for re-verification — you do not drive that transition.
+**If verification fails and the orchestrator returns you here to fix:** address only the failing items (back to Step 2), re-verify, then announce Phase 5 complete again. Don't drive the Phase 6 re-entry — the orchestrator does.
 
 ## When to Stop and Ask for Help
 

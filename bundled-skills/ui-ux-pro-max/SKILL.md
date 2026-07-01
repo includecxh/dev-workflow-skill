@@ -101,7 +101,7 @@ This skill's search scripts require a Python runtime. The dev-workflow installer
 
 If `.runtime-config` is missing, detect at invocation time: prefer `uv` (auto-manages Python), fall back to `python3` (must be real, not a Windows Store stub).
 
-**Path note**: In the bundled/isolated installation, scripts live at `~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py`. Use that full path. The short `skills/ui-ux-pro-max/...` paths in examples below are abbreviated for readability — replace with the full bundled path in practice.
+**Path note**: In the bundled installation, scripts live at `~/.claude/skills/dev-workflow/bundled-skills/ui-ux-pro-max/scripts/search.py` — use that full path in all commands.
 
 ---
 
