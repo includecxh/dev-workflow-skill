@@ -1,6 +1,6 @@
 # Complexity Signals — Detailed Reference
 
-This document provides the full signal reference for Phase 0 Step 2 (Complexity Assessment).
+This document provides the full signal reference for Phase 0 Step 2 (Complexity Assessment) — i.e., signals read **before** work starts, to classify 🟢/🟡/🔴 upfront. For **post-hoc** misjudgment signals (discovered during Phase 5 that the upfront call was wrong), see the Rollback section in main SKILL.md.
 
 ## Upgrade Signals with Examples
 

@@ -40,6 +40,8 @@ User confirms → move to Phase 2 Lite. No separate design document, no spec rev
 
 **What you STILL do in Lite mode:**
 - `frontend-design` / `ui-ux-pro-max` invocation — if the change involves ANY frontend/UI work, both skills must be used regardless of complexity. Even simple UI tweaks can fall into anti-patterns.
+  - `frontend-design` is read in full (cheap, anti-default protection).
+  - `ui-ux-pro-max` uses a lightweight single `--domain` search in Lite mode (not the full `--design-system`).
 
 ## Phase 2 Lite — Affected-Items-Only Confirmation
 

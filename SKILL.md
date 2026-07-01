@@ -456,18 +456,13 @@ Every phase ends with a standard declaration. These declarations are **log annou
 
 ## Conflict Resolution Rules (Summary)
 
-The full 17 rules with rationale are in `references/conflict-rules-full.md`. The essential ones:
+The full 17 rules with rationale are in `references/conflict-rules-full.md`. The 3 most-hit:
 
 1. **This workflow > skill auto-trigger** — if a skill wants to fire out of order, the workflow wins
-2. **This workflow > other CLAUDE.md rules** — on conflict, follow the workflow
-3. **brainstorming only fires on new requests** — not on bug fixes or small changes
-4. **Phase 2 must follow Phase 1** — no skipping from brainstorming directly to planning
-5. **tdd is only used inside Phase 5** — not at other phases
-6. **Complexity assessment is mandatory** — Phase 0 Step 2 cannot be skipped
-7. **Merged phases cannot be split** — 🟢🟡 must use parallel/merged mode
-8. **Complex projects must use all 8 phases** — 🔴 cannot skip or merge phases
-9. **frontend-design + ui-ux-pro-max are paired for frontend projects** — `frontend-design` is the **thinking side** (design philosophy, principles, anti-patterns); `ui-ux-pro-max` is the **practice side** (design system, colors, typography, components). Always invoke both together for any UI project, regardless of complexity. Thinking side first → Practice side second
-10. **Complexity misjudgment requires rollback** — if Phase 5 reveals the complexity was underestimated, roll back ALL implemented code and return to Phase 0 for re-classification. No carrying over code from the abandoned path
+2. **brainstorming only fires on new requests** — not on bug fixes or small changes
+3. **frontend-design + ui-ux-pro-max are paired for frontend projects** — thinking side first → practice side second, any UI project regardless of complexity
+
+For the rest (tdd/prototype/diagnose scope, merged-phase rules, complexity-rollback, etc.), see the full reference.
 
 ---
 

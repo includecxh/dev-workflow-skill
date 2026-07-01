@@ -44,29 +44,19 @@ Skills like `claude-api` or other format-specific skills that handle specific fi
 
 If auto-memory records preferences like "last time we skipped Phase 2" or "the user prefers to skip worktrees", those preferences don't override mandatory workflow steps. The workflow is the authority.
 
-## Rule 11: Frontend-Design Only for Frontend Projects
+## Rule 11: Frontend Skills Are Paired (Thinking + Practice)
 
-The `frontend-design` skill is only invoked when the project involves UI/frontend development. Pure backend, CLI, or database projects do NOT trigger it.
+For ANY frontend/UI project (regardless of 🟢🟡🔴 complexity), `frontend-design` and `ui-ux-pro-max` MUST be invoked together. Pure backend, CLI, or database projects do NOT trigger them.
 
-**Judging "involves frontend"**:
-- Project has web pages, UI components, or a frontend framework
-- User mentions pages, layouts, styles, or interactions
-- Tech stack includes React/Vue/Next.js/Svelte/etc.
+**Judging "involves frontend"**: project has web pages/UI components/a frontend framework; user mentions pages/layouts/styles/interactions; stack includes React/Vue/Next.js/Svelte/etc.
 
-**When invoked**: During Phase 1 for design thinking, and during Phase 6 for final review.
+- **`frontend-design` = Thinking side**: design philosophy, principles, anti-patterns, UX reasoning, copywriting → "why design it this way". Invoked first to set direction (Phase 1), and at Phase 6 for final review.
+- **`ui-ux-pro-max` = Practice side**: design system, colors, typography, components, tech-stack adaptation → "how to build it". Invoked after frontend-design sets direction (Phase 1 design-system gen), at Phase 5 for stack guide, at Phase 6 for visual check.
+- **Order**: Thinking side first → Practice side second. Never invoke only one for a frontend project. Even a 🟢 simple UI tweak requires both.
 
-**`frontend-design` is the THINKING side (思想侧)**: It focuses on design philosophy, principles, anti-patterns, self-criticism loops, UX reasoning, and copywriting guidance. It answers "why design it this way." Must be invoked BEFORE `ui-ux-pro-max` to set the design direction.
+## Rule 12: (merged into Rule 11)
 
-## Rule 12: UI-UX-Pro-Max Only for Frontend Projects
-
-Same conditions as Rule 11. The `ui-ux-pro-max` skill is invoked:
-- During Phase 1: design system generation (after frontend-design sets the direction)
-- During Phase 5: tech stack implementation guide
-- During Phase 6: pre-delivery visual check
-
-**`ui-ux-pro-max` is the PRACTICE side (实践侧)**: It focuses on design materialization — color palettes, typography, component libraries, tech-stack adaptation, and visual systems. It answers "how to build it." Must be invoked AFTER `frontend-design` to materialize the design direction.
-
-**Rules 11 & 12 are paired**: For ANY frontend project (regardless of 🟢🟡🔴 complexity), both skills MUST be invoked together. Thinking side first → Practice side second. Even a 🟢 simple UI tweak requires both skills.
+Rule 12 content (ui-ux-pro-max scope) merged into Rule 11. Kept as placeholder so Rule-number references below stay valid.
 
 ## Rule 13: Complexity Assessment Cannot Be Skipped
 
@@ -91,14 +81,9 @@ When Phase 0 assesses 🔴:
 
 Complex projects need independent gates because the risk of cross-contamination between phases is real. The extra time is the cost of managing complexity.
 
-## Rule 16: Frontend Skills Are Paired (Thinking + Practice)
+## Rule 16: (merged into Rule 11)
 
-For ANY project involving frontend/UI, `frontend-design` and `ui-ux-pro-max` MUST be invoked together as a pair, regardless of complexity level (🟢🟡🔴).
-
-- **`frontend-design` = Thinking side**: Design philosophy, principles, anti-patterns, UX reasoning → "why design it this way"
-- **`ui-ux-pro-max` = Practice side**: Design system, colors, typography, components, tech stack → "how to build it"
-- **Order**: Thinking side first → Practice side second. Never invoke only one of them for a frontend project.
-- **Even 🟢 simple UI changes** require both skills (though the design system output can be lighter).
+Rule 16 content (frontend skills paired) merged into Rule 11. Kept as placeholder so Rule-number references stay valid.
 
 ## Rule 17: Complexity Misjudgment Requires Rollback
 
@@ -141,5 +126,5 @@ When multiple rules seem to conflict:
 | User asks for TDD during Phase 2 | Rule 6 | Remind: TDD is for Phase 5; Phase 2 is spec confirmation |
 | Bug fix turns into a feature | Bug upgrade rule | Return to Phase 0, re-classify, start fresh |
 | 🟡 project but user wants all 8 phases | Rule 14 | Respect user's preference — upgrade to 🔴 handling |
-| 🟢 UI tweak without frontend skills | Rule 16 | Must invoke both frontend-design + ui-ux-pro-max even for 🟢 |
+| 🟢 UI tweak without frontend skills | Rule 11 | Must invoke both frontend-design + ui-ux-pro-max even for 🟢 |
 | Phase 5 reveals complexity was underestimated | Rule 17 | Roll back all code, return to Phase 0, re-classify |
