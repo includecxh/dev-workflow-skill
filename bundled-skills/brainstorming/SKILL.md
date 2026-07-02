@@ -19,17 +19,7 @@ Every project goes through this process. A todo list, a single-function utility,
 
 ## 🟢 Phase 1 Lite Mode (Simple Complexity)
 
-When Phase 0 assessed complexity as 🟢 (simple), use this streamlined process instead of the full checklist:
-
-1. **Quick confirmation** — Ask 2-3 focused questions (key constraints + boundary conditions), prefer multiple choice
-2. **Inline design** — Present the design directly in conversation (no separate design document), one paragraph covering architecture + data flow + key decisions
-3. **Quick approval** — User confirms → move directly to Phase 2 Lite
-
-**What you DON'T need in Lite mode:**
-- Multiple approach comparison (only one clear approach)
-- Separate design document (inline confirmation is sufficient)
-- Visual Companion offer
-- frontend-design / ui-ux-pro-max invocation — **EXCEPTION**: when Phase 0 Step 3 sets `is_frontend=true`, invoke both even in Lite mode. `frontend-design` is always read in full (cheap, anti-default protection). `ui-ux-pro-max` uses a lightweight single `--domain` search in Lite mode (not the full `--design-system`). See "Frontend Design (Conditional)" below.
+When Phase 0 assessed 🟢, use the streamlined Lite process: 2-3 quick questions + inline design confirmation (no separate design doc). Full Lite details (steps, DON'T list, frontend exception) in `references/lite-modes.md`.
 
 **After approval in Lite mode**, announce: "Design confirmed. Handing back to orchestrator for Phase 2 (Lite)."
 
