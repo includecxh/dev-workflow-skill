@@ -117,6 +117,7 @@ dev-workflow/
 - [obra/superpowers](https://github.com/obra/superpowers) — 子技能原始版本（MIT）
 - [mattpocock/skills](https://github.com/mattpocock/skills) — 目录结构灵感（MIT）
 - [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) — 前端设计系统（MIT）
+- [anthropics/skills](https://github.com/anthropics/skills) — frontend-design 设计思维（Apache 2.0）
 
 完整署名见 [ATTRIBUTION.md](ATTRIBUTION.md)。
 
